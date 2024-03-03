@@ -1,12 +1,17 @@
-import 'region_info_entity.dart';
+class StatisticsEntity<SubjectType> {
+  final Map<SubjectType, int> subjectToVisitorsNumber; //id to visitors count
 
-class StatisticsEntity {
-  final Map<String, int> idToVisitorsNumber; //id to visitors count
+  int? _totalCached;
 
-  int count;
+  int getTotal() {
+    if (_totalCached == null) {
+      var values = subjectToVisitorsNumber.values;
+      _totalCached = values.reduce((sum, element) => sum + element);
+    }
+    return _totalCached!;
+  }
 
   StatisticsEntity({
-    required this.idToVisitorsNumber,
-    required this.count,
+    required this.subjectToVisitorsNumber,
   });
 }
