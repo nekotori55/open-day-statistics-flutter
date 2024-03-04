@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'features/visitors_info/data/repositories/visitors_statistics_repository_impl.dart';
+import 'features/visitors_info/presentation/manager/app.dart';
+
 void main() {
-  runApp(const MainApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  var repository = VisitorStatisticsRepositoryImpl();
+
+  runApp(App(
+    repository: repository,
+  ));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
-}
