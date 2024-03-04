@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
+import 'initial_db_data.dart';
+
 part 'local_database.g.dart';
 
 @DriftDatabase(tables: [Districts, Regions, Schools, Visitors])
@@ -26,6 +28,21 @@ class AppDatabase extends _$AppDatabase {
     return MigrationStrategy(
       onCreate: (Migrator m) async {
         await m.createAll();
+
+        var regionRows = initialRegions.entries.map((entry) =>
+            RegionsCompanion(id: Value(entry.key), name: Value(entry.value)));
+
+        var districtRows = initialDistricts.entries.map((entry) =>
+            DistrictsCompanion(id: Value(entry.key), name: Value(entry.value)));
+
+        var schoolRows = initialSchools.entries.map((entry) =>
+            SchoolsCompanion(id: Value(entry.key), name: Value(entry.value)));
+
+        batch((batch) {
+          batch.insertAll(regions, regionRows);
+          batch.insertAll(districts, districtRows);
+          batch.insertAll(schools, schoolRows);
+        });
       },
     );
   }
