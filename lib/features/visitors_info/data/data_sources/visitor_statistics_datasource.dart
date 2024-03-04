@@ -20,9 +20,9 @@ abstract class VisitorStatisticsDatasource {
 
   Future<ApiResult<RegionModel>> getRegionByID(String id);
 
-  Future<ApiResult<StatisticsModel>> getRegionStatistics() ;
+  Future<ApiResult<StatisticsModel>> getRegionStatistics();
 
-  Future<ApiResult<SchoolModel>> getSchoolByID(String id) ;
+  Future<ApiResult<SchoolModel>> getSchoolByID(String id);
 
   Future<ApiResult<StatisticsModel>> getSchoolStatistics();
 }
