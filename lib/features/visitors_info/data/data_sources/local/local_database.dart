@@ -131,15 +131,6 @@ LazyDatabase _openConnection() {
 }
 
 class Districts extends Table {
-  TextColumn get id => text().withLength(min: 6, max: 6)();
-
-  TextColumn get name => text()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-class Regions extends Table {
   TextColumn get id => text().withLength(min: 5, max: 5)();
 
   TextColumn get name => text()();
@@ -148,8 +139,17 @@ class Regions extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+class Regions extends Table {
+  TextColumn get id => text().withLength(min: 5, max: 6)();
+
+  TextColumn get name => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 class Schools extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().withLength(min:1, max:2)();
 
   TextColumn get name => text()();
 

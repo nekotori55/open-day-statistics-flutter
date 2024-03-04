@@ -14,7 +14,7 @@ class $DistrictsTable extends Districts
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 6),
+          GeneratedColumn.checkTextLength(minTextLength: 5, maxTextLength: 5),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -196,7 +196,7 @@ class $RegionsTable extends Regions with TableInfo<$RegionsTable, Region> {
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 5, maxTextLength: 5),
+          GeneratedColumn.checkTextLength(minTextLength: 5, maxTextLength: 6),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -377,7 +377,10 @@ class $SchoolsTable extends Schools with TableInfo<$SchoolsTable, School> {
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 2),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
