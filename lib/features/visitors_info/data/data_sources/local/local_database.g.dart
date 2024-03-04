@@ -14,7 +14,7 @@ class $DistrictsTable extends Districts
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 5, maxTextLength: 5),
+          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 6),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
