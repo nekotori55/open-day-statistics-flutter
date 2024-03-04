@@ -6,13 +6,11 @@ class VisitorModel {
 
   final String schoolID;
 
-  final int grade;
 
   VisitorModel({
     required this.regionID,
     required this.districtID,
     required this.schoolID,
-    required this.grade,
   });
 
 }
