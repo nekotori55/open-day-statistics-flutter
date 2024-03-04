@@ -24,7 +24,7 @@ class VisitorStatisticsLocalDatasourceImpl
       await database.addVisitor(entry);
       return const ApiResult<Null>.success(data: null);
     } catch (e) {
-      return ApiResult<Null>.failure(error: ErrorResult(message: e.toString()));
+      return ApiResult<Null>.failure(error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -37,7 +37,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<List<DistrictModel>>.success(data: result);
     } catch (e) {
       return ApiResult<List<DistrictModel>>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -50,7 +50,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<List<RegionModel>>.success(data: result);
     } catch (e) {
       return ApiResult<List<RegionModel>>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -63,7 +63,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<List<SchoolModel>>.success(data: result);
     } catch (e) {
       return ApiResult<List<SchoolModel>>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -75,7 +75,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<DistrictModel>.success(data: result);
     } catch (e) {
       return ApiResult<DistrictModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -87,7 +87,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<StatisticsModel>.success(data: StatisticsModel(result));
     } catch (e) {
       return ApiResult<StatisticsModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -99,7 +99,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<RegionModel>.success(data: result);
     } catch (e) {
       return ApiResult<RegionModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -111,7 +111,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<StatisticsModel>.success(data: StatisticsModel(result));
     } catch (e) {
       return ApiResult<StatisticsModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -123,7 +123,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<SchoolModel>.success(data: result);
     } catch (e) {
       return ApiResult<SchoolModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 
@@ -135,7 +135,7 @@ class VisitorStatisticsLocalDatasourceImpl
       return ApiResult<StatisticsModel>.success(data: StatisticsModel(result));
     } catch (e) {
       return ApiResult<StatisticsModel>.failure(
-          error: ErrorResult(message: e.toString()));
+          error: ErrorResult(message: "[Database Error] $e"));
     }
   }
 }
