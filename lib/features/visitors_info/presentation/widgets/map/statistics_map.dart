@@ -5,11 +5,13 @@ import 'models.dart';
 import 'utils.dart';
 
 class StatisticsMap extends StatefulWidget {
-  const StatisticsMap({super.key, required this.mapSvg, required this.centerId, required this.fromPath});
+  const StatisticsMap({super.key, required this.mapSvg, required this.centerId, required this.fromPath, required this.getIdMap});
 
   final String mapSvg;
   final String centerId;
   final bool fromPath;
+
+  final Future<Map<String, int>> Function() getIdMap;
 
   @override
   State<StatisticsMap> createState() => _StatisticsMapState();
@@ -19,9 +21,14 @@ class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateM
   late Animation<double> _animation;
   late AnimationController _controller;
 
+  Map<String, int> idmap = {};
+
   @override
-  void initState() {
+  Future<void> initState() async {
     _init();
+    
+    idmap = await widget.getIdMap();
+
     super.initState();
 
     _controller = AnimationController(

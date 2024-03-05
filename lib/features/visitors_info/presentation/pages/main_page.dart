@@ -28,7 +28,15 @@ class MainPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 StatisticsMap(
-                    mapSvg: RussiaSvg, centerId: "RU-KLU", fromPath: true),
+                  mapSvg: RussiaSvg,
+                  centerId: "RU-KLU",
+                  fromPath: true,
+                  getIdMap: () async {
+                    var result = await controller.getRegionStatistics();
+                    return result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.id, value));
+                  },
+                ),
                 StatisticsChart(dataMap: {
                   "Flutter": 5,
                   "React": 3,
@@ -43,7 +51,16 @@ class MainPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                StatisticsMap(mapSvg: KlSubSvg, centerId: "kl_kal", fromPath: true),
+                StatisticsMap(
+                  mapSvg: KlSubSvg,
+                  centerId: "kl_kal",
+                  fromPath: true,
+                  getIdMap: () async {
+                    var result = await controller.getDistrictStatistics();
+                    return result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.id, value));
+                  },
+                ),
                 StatisticsChart(dataMap: {
                   "Flutter": 5,
                   "React": 3,
@@ -54,12 +71,20 @@ class MainPage extends StatelessWidget {
                   "Оба": 10,
                 }),
               ],
-
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                StatisticsMap(mapSvg: KlCitySvg, centerId: "0", fromPath: false),
+                StatisticsMap(
+                  mapSvg: KlCitySvg,
+                  centerId: "0",
+                  fromPath: false,
+                  getIdMap: () async {
+                    var result = await controller.getSchoolStatistics();
+                    return result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.id, value));
+                  },
+                ),
                 StatisticsChart(dataMap: {
                   "Flutter": 5,
                   "React": 3,
