@@ -1,6 +1,5 @@
 import 'package:open_day_statistics_flutter/core/common_domain/api_result.dart';
 import 'package:open_day_statistics_flutter/core/common_domain/error_result.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/data/data_sources/local/visitor_statistics_local_datasource_impl.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/data_sources/visitor_statistics_datasource.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/models/district_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/models/region_model.dart';
@@ -15,23 +14,22 @@ import 'package:open_day_statistics_flutter/features/visitors_info/data/models/s
 import 'package:open_day_statistics_flutter/features/visitors_info/data/models/visitor_model.dart';
 
 class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
-  late final VisitorStatisticsDatasource _datasource;
+  final VisitorStatisticsDatasource datasource;
 
   @override
   Future<ApiResult<Null>> addVisitor(VisitorEntity visitor) {
-
     var visitorModel = VisitorModel(
         regionID: visitor.region.id,
         districtID: visitor.district.id,
         schoolID: visitor.school.id);
 
-    return _datasource.addVisitor(visitorModel);
+    return datasource.addVisitor(visitorModel);
   }
 
   @override
   Future<ApiResult<List<DistrictEntity>>> getAllDistricts() async {
-    var result = await _datasource.getAllDistricts();
 
+    var result = await datasource.getAllDistricts();
     switch (result) {
       case Success():
         List<DistrictModel> resultData = result.data;
@@ -48,8 +46,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<List<RegionEntity>>> getAllRegions() async {
-    var result = await _datasource.getAllRegions();
 
+    var result = await datasource.getAllRegions();
     switch (result) {
       case Success():
         List<RegionModel> resultData = result.data;
@@ -66,7 +64,7 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<List<SchoolEntity>>> getAllSchools() async {
-    var result = await _datasource.getAllSchools();
+    var result = await datasource.getAllSchools();
     switch (result) {
       case Success():
         List<SchoolModel> resultData = result.data;
@@ -83,7 +81,7 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<DistrictEntity>> getDistrictByID(String id) async {
-    var result = await _datasource.getDistrictByID(id);
+    var result = await datasource.getDistrictByID(id);
     switch (result) {
       case Success():
         DistrictModel resultData = result.data;
@@ -96,8 +94,9 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   }
 
   @override
-  Future<ApiResult<StatisticsEntity<DistrictEntity>>> getDistrictStatistics() async {
-    var result = await _datasource.getDistrictStatistics();
+  Future<ApiResult<StatisticsEntity<DistrictEntity>>>
+      getDistrictStatistics() async {
+    var result = await datasource.getDistrictStatistics();
     switch (result) {
       case Success():
         StatisticsModel resultData = result.data;
@@ -114,7 +113,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
           });
         } catch (error) {
           if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<DistrictEntity>>.failure(error: error);
+            return ApiResult<StatisticsEntity<DistrictEntity>>.failure(
+                error: error);
           } else {
             throw UnimplementedError();
           }
@@ -123,7 +123,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
             data: StatisticsEntity(subjectToVisitorsNumber: a));
 
       case Failure():
-        return ApiResult<StatisticsEntity<DistrictEntity>>.failure(error: result.error);
+        return ApiResult<StatisticsEntity<DistrictEntity>>.failure(
+            error: result.error);
 
       default:
         throw TypeError();
@@ -132,7 +133,7 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<RegionEntity>> getRegionByID(String id) async {
-    var result = await _datasource.getRegionByID(id);
+    var result = await datasource.getRegionByID(id);
     switch (result) {
       case Success():
         RegionModel resultData = result.data;
@@ -145,8 +146,9 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   }
 
   @override
-  Future<ApiResult<StatisticsEntity<RegionEntity>>> getRegionStatistics() async {
-    var result = await _datasource.getRegionStatistics();
+  Future<ApiResult<StatisticsEntity<RegionEntity>>>
+      getRegionStatistics() async {
+    var result = await datasource.getRegionStatistics();
     switch (result) {
       case Success():
         StatisticsModel resultData = result.data;
@@ -163,7 +165,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
           });
         } catch (error) {
           if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<RegionEntity>>.failure(error: error);
+            return ApiResult<StatisticsEntity<RegionEntity>>.failure(
+                error: error);
           } else {
             throw UnimplementedError();
           }
@@ -172,7 +175,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
             data: StatisticsEntity(subjectToVisitorsNumber: a));
 
       case Failure():
-        return ApiResult<StatisticsEntity<RegionEntity>>.failure(error: result.error);
+        return ApiResult<StatisticsEntity<RegionEntity>>.failure(
+            error: result.error);
 
       default:
         throw TypeError();
@@ -181,7 +185,7 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<SchoolEntity>> getSchoolByID(String id) async {
-    var result = await _datasource.getSchoolByID(id);
+    var result = await datasource.getSchoolByID(id);
     switch (result) {
       case Success():
         SchoolModel resultData = result.data;
@@ -194,8 +198,9 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   }
 
   @override
-  Future<ApiResult<StatisticsEntity<SchoolEntity>>> getSchoolStatistics() async {
-    var result = await _datasource.getRegionStatistics();
+  Future<ApiResult<StatisticsEntity<SchoolEntity>>>
+      getSchoolStatistics() async {
+    var result = await datasource.getRegionStatistics();
     switch (result) {
       case Success():
         StatisticsModel resultData = result.data;
@@ -212,7 +217,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
           });
         } catch (error) {
           if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<SchoolEntity>>.failure(error: error);
+            return ApiResult<StatisticsEntity<SchoolEntity>>.failure(
+                error: error);
           } else {
             throw UnimplementedError();
           }
@@ -221,14 +227,14 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
             data: StatisticsEntity(subjectToVisitorsNumber: a));
 
       case Failure():
-        return ApiResult<StatisticsEntity<SchoolEntity>>.failure(error: result.error);
+        return ApiResult<StatisticsEntity<SchoolEntity>>.failure(
+            error: result.error);
 
       default:
         throw TypeError();
     }
   }
 
-  VisitorStatisticsRepositoryImpl() {
-    _datasource = VisitorStatisticsLocalDatasourceImpl();
-  }
+  VisitorStatisticsRepositoryImpl(
+      {required this.useCache, required this.datasource});
 }
