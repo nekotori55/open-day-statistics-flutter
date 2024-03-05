@@ -7,11 +7,13 @@ class DropdownField<Model extends ViewModel> extends StatefulWidget {
   final String label;
 
   final Future<List<Model>> Function(String? s) getItems;
+  final Function(Model? model)? onChanged;
 
   const DropdownField({
     super.key,
     required this.getItems,
     required this.label,
+    this.onChanged
   });
 
   @override
@@ -39,6 +41,7 @@ class _DropdownFieldState<Model extends ViewModel>
     return DropdownSearch<Model>(
       asyncItems: widget.getItems,
       itemAsString: (item) => item.toStringByName(),
+      onChanged: widget.onChanged,
       compareFn: (item1, item2) =>
           item1.toStringByName() == item2.toStringByName(),
       popupProps: PopupProps.menu(
