@@ -7,6 +7,7 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/map.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
 
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/form_container.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -24,7 +25,10 @@ class MainPage extends StatelessWidget {
             Map(mapSvg: KlCitySvg, centerId: "0", fromPath: false),
           ],
         ),
-        floatingActionButton: PopUpButton(),
+        floatingActionButton: PopUpButton(
+          form: FormContainer(
+          ),
+        ),
       ),
     );
   }

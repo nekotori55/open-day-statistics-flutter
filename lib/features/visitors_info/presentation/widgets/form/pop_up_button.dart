@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'form_container.dart';
 
 class PopUpButton extends StatefulWidget {
+
+  final Widget form;
   const PopUpButton({
     super.key,
+    required this.form,
   });
 
   @override
@@ -11,6 +14,7 @@ class PopUpButton extends StatefulWidget {
 }
 
 class _PopUpButtonState extends State<PopUpButton> {
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -21,7 +25,7 @@ class _PopUpButtonState extends State<PopUpButton> {
       onPressed: () {
         showDialog<void>(
           context: context,
-          builder: (context) => FormContainer(),
+          builder: (context) => widget.form,
         );
       },
     );

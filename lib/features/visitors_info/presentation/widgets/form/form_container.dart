@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'visitor_form.dart';
 
 class FormContainer extends StatelessWidget {
   const FormContainer({
     super.key,
+    this.child,
   });
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class FormContainer extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      content: VisitorForm(),
+      content: child,
     );
   }
 }
