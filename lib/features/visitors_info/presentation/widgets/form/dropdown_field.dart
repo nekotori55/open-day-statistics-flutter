@@ -1,22 +1,25 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
-class DropdownField extends StatefulWidget {
-  final List<String> items;
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/base_view_model.dart';
+
+class DropdownField<Model extends ViewModel> extends StatefulWidget {
   final String label;
+
+  final Future<List<Model>> Function(String? s) getItems;
 
   const DropdownField({
     super.key,
-    required this.items,
+    required this.getItems,
     required this.label,
   });
 
   @override
-  State<DropdownField> createState() => _DropdownFieldState();
+  State<DropdownField<Model>> createState() => _DropdownFieldState<Model>();
 }
 
-class _DropdownFieldState extends State<DropdownField>
-    with SingleTickerProviderStateMixin {
+class _DropdownFieldState<Model extends ViewModel>
+    extends State<DropdownField<Model>> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animationValue;
 
@@ -25,16 +28,19 @@ class _DropdownFieldState extends State<DropdownField>
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: _animationDuration);
+    _animationController =
+        AnimationController(vsync: this, duration: _animationDuration);
     _animationValue = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropdownSearch<String>(
-      items: widget.items,
-
+    return DropdownSearch<Model>(
+      asyncItems: widget.getItems,
+      itemAsString: (item) => item.toStringByName(),
+      compareFn: (item1, item2) =>
+          item1.toStringByName() == item2.toStringByName(),
       popupProps: PopupProps.menu(
           searchFieldProps: TextFieldProps(
             controller: _userEditTextController,
@@ -93,7 +99,6 @@ class _DropdownFieldState extends State<DropdownField>
           ),
         ),
       ),
-
       onBeforePopupOpening: (_) {
         return Future(() {
           _animationController.forward();
