@@ -3,6 +3,7 @@ import 'package:open_day_statistics_flutter/features/visitors_info/domain/reposi
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/statistics_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 
@@ -75,6 +76,48 @@ class VisitorsViewControllerImpl extends VisitorsViewController {
         return [];
       case Success():
         return response.data.map((e) => SchoolViewModel.fromEntity(e)).toList();
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  @override
+  Future<StatisticsViewModel<DistrictViewModel>> getDistrictStatistics() async {
+    var response = await repository.getDistrictStatistics();
+    switch (response) {
+      case Failure():
+        notifyErrorListeners(response.error.message);
+        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+      case Success():
+        return StatisticsViewModel.fromEntity(response.data);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  @override
+  Future<StatisticsViewModel<RegionViewModel>> getRegionStatistics() async {
+    var response = await repository.getRegionStatistics();
+    switch (response) {
+      case Failure():
+        notifyErrorListeners(response.error.message);
+        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+      case Success():
+        return StatisticsViewModel.fromEntity(response.data);
+      default:
+        throw UnimplementedError();
+    }
+  }
+
+  @override
+  Future<StatisticsViewModel<SchoolViewModel>> getSchoolStatistics() async {
+    var response = await repository.getSchoolStatistics();
+    switch (response) {
+      case Failure():
+        notifyErrorListeners(response.error.message);
+        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+      case Success():
+        return StatisticsViewModel.fromEntity(response.data);
       default:
         throw UnimplementedError();
     }
