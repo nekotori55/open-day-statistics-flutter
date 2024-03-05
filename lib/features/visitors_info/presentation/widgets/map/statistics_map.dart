@@ -4,18 +4,18 @@ import 'svg_painter.dart';
 import 'models.dart';
 import 'utils.dart';
 
-class Map extends StatefulWidget {
-  const Map({super.key, required this.mapSvg, required this.centerId, required this.fromPath});
+class StatisticsMap extends StatefulWidget {
+  const StatisticsMap({super.key, required this.mapSvg, required this.centerId, required this.fromPath});
 
   final String mapSvg;
   final String centerId;
   final bool fromPath;
 
   @override
-  State<Map> createState() => _MapState();
+  State<StatisticsMap> createState() => _StatisticsMapState();
 }
 
-class _MapState extends State<Map> with TickerProviderStateMixin {
+class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _controller;
 
@@ -99,13 +99,13 @@ class _MapState extends State<Map> with TickerProviderStateMixin {
                 child: Stack(
                   children: [
                     CustomPaint(painter: PathPainter(_pathsList, scale, 0.5)),
-                    CustomPaint(painter: PointPainter(_pointsList, scale)),
                     CustomPaint(painter: NamePainter(_namesList, scale, 8)),
                     Builder(
                         builder: (context) {
                           if (widget.fromPath) {
                               return Stack(
                                 children: [
+                                  CustomPaint(painter: PointPainter(_pointsList, scale)),
                                   CustomPaint(painter:
                                   LinePainter(
                                     startPathsList: _pathsList,
@@ -129,6 +129,7 @@ class _MapState extends State<Map> with TickerProviderStateMixin {
                                   shift: _animation.value,
                                 )
                                 ),
+                                CustomPaint(painter: PointPainter(_pointsList, scale)),
                               ],
                             );
                           }
