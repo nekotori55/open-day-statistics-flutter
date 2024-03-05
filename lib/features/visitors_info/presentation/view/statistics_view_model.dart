@@ -11,20 +11,23 @@ class StatisticsViewModel<SubjectType extends ViewModel> extends ViewModel {
 
   final int total;
 
+
   StatisticsViewModel({required this.subjectToVisitorNumber, required this.total});
 
 
   factory StatisticsViewModel.fromEntity(StatisticsEntity entity) {
-    late var viewToNum;
+    Type typeOf<X>() => X;
 
-    switch (SubjectType) {
-      case RegionViewModel():
+    late var viewToNum;
+    var type = typeOf<SubjectType>();
+    switch (type) {
+      case RegionViewModel:
         viewToNum = entity.subjectToVisitorsNumber.map((key, value) => MapEntry(RegionViewModel.fromEntity(key), value));
-      case DistrictViewModel():
+      case DistrictViewModel:
         viewToNum = entity.subjectToVisitorsNumber.map((key, value) => MapEntry(DistrictViewModel.fromEntity(key), value));
-      case SchoolViewModel():
+      case SchoolViewModel:
         viewToNum = entity.subjectToVisitorsNumber.map((key, value) => MapEntry(SchoolViewModel.fromEntity(key), value));
-      default: throw UnimplementedError();
+      default: print(type);
     }
 
     return StatisticsViewModel(subjectToVisitorNumber: viewToNum, total:entity.getTotal());

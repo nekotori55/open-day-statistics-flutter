@@ -116,24 +116,19 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
       case Success():
         StatisticsModel resultData = result.data;
         Map<DistrictEntity, int> a = {};
-        try {
-          resultData.idToTotal.entries.forEach((element) async {
-            var apiResult = await getDistrictByID(element.key);
-            if (apiResult is Success) {
+
+        for (var element in resultData.idToTotal.entries) {
+          var apiResult = await getDistrictByID(element.key);
+          switch (apiResult) {
+            case Success():
               var entity = (apiResult as Success).data;
               a[entity] = element.value;
-            } else {
-              throw (apiResult as Failure).error;
-            }
-          });
-        } catch (error) {
-          if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<DistrictEntity>>.failure(
-                error: error);
-          } else {
-            throw UnimplementedError();
+            case Failure():
+              return ApiResult<StatisticsEntity<DistrictEntity>>.failure(
+                  error: apiResult.error);
           }
         }
+
         return ApiResult<StatisticsEntity<DistrictEntity>>.success(
             data: StatisticsEntity(subjectToVisitorsNumber: a));
 
@@ -168,24 +163,19 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
       case Success():
         StatisticsModel resultData = result.data;
         Map<RegionEntity, int> a = {};
-        try {
-          resultData.idToTotal.entries.forEach((element) async {
-            var apiResult = await getDistrictByID(element.key);
-            if (apiResult is Success) {
+
+        for (var element in resultData.idToTotal.entries) {
+          var apiResult = await getRegionByID(element.key);
+          switch (apiResult) {
+            case Success():
               var entity = (apiResult as Success).data;
               a[entity] = element.value;
-            } else {
-              throw (apiResult as Failure).error;
-            }
-          });
-        } catch (error) {
-          if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<RegionEntity>>.failure(
-                error: error);
-          } else {
-            throw UnimplementedError();
+            case Failure():
+              return ApiResult<StatisticsEntity<RegionEntity>>.failure(
+                  error: apiResult.error);
           }
         }
+
         return ApiResult<StatisticsEntity<RegionEntity>>.success(
             data: StatisticsEntity(subjectToVisitorsNumber: a));
 
@@ -215,27 +205,21 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   @override
   Future<ApiResult<StatisticsEntity<SchoolEntity>>>
       getSchoolStatistics() async {
-    var result = await datasource.getRegionStatistics();
+    var result = await datasource.getSchoolStatistics();
     switch (result) {
       case Success():
         StatisticsModel resultData = result.data;
         Map<SchoolEntity, int> a = {};
-        try {
-          resultData.idToTotal.entries.forEach((element) async {
-            var apiResult = await getDistrictByID(element.key);
-            if (apiResult is Success) {
+
+        for (var element in resultData.idToTotal.entries) {
+          var apiResult = await getSchoolByID(element.key);
+          switch (apiResult) {
+            case Success():
               var entity = (apiResult as Success).data;
               a[entity] = element.value;
-            } else {
-              throw (apiResult as Failure).error;
-            }
-          });
-        } catch (error) {
-          if (error is ErrorResult) {
-            return ApiResult<StatisticsEntity<SchoolEntity>>.failure(
-                error: error);
-          } else {
-            throw UnimplementedError();
+            case Failure():
+              return ApiResult<StatisticsEntity<SchoolEntity>>.failure(
+                  error: apiResult.error);
           }
         }
         return ApiResult<StatisticsEntity<SchoolEntity>>.success(

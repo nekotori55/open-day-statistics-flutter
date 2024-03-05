@@ -87,9 +87,9 @@ class VisitorsViewControllerImpl extends VisitorsViewController {
     switch (response) {
       case Failure():
         notifyErrorListeners(response.error.message);
-        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+        return StatisticsViewModel<DistrictViewModel>(subjectToVisitorNumber: const {}, total: 0);
       case Success():
-        return StatisticsViewModel.fromEntity(response.data);
+        return StatisticsViewModel<DistrictViewModel>.fromEntity(response.data);
       default:
         throw UnimplementedError();
     }
@@ -101,9 +101,9 @@ class VisitorsViewControllerImpl extends VisitorsViewController {
     switch (response) {
       case Failure():
         notifyErrorListeners(response.error.message);
-        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+        return StatisticsViewModel<RegionViewModel>(subjectToVisitorNumber: const {}, total: 0);
       case Success():
-        return StatisticsViewModel.fromEntity(response.data);
+        return StatisticsViewModel<RegionViewModel>.fromEntity(response.data);
       default:
         throw UnimplementedError();
     }
@@ -115,9 +115,9 @@ class VisitorsViewControllerImpl extends VisitorsViewController {
     switch (response) {
       case Failure():
         notifyErrorListeners(response.error.message);
-        return StatisticsViewModel(subjectToVisitorNumber: const {}, total: 0);
+        return StatisticsViewModel<SchoolViewModel>(subjectToVisitorNumber: const {}, total: 0);
       case Success():
-        return StatisticsViewModel.fromEntity(response.data);
+        return StatisticsViewModel<SchoolViewModel>.fromEntity(response.data);
       default:
         throw UnimplementedError();
     }

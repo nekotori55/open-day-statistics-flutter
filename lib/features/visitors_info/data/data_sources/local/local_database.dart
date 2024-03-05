@@ -83,7 +83,7 @@ class AppDatabase extends _$AppDatabase {
   Future<Map<District, int>> countDistrictsVisitors() async {
     final amountOfVisitors = visitors.id.count();
     final query = select(districts).join([
-      innerJoin(visitors, districts.id.equalsExp(visitors.districtId),
+      innerJoin(visitors, districts.id.isExp(visitors.districtId),
           useColumns: false),
     ])
       ..addColumns([amountOfVisitors])
@@ -102,13 +102,14 @@ class AppDatabase extends _$AppDatabase {
   Future<Map<School, int>> countSchoolVisitors() async {
     final amountOfVisitors = visitors.id.count();
     final query = select(schools).join([
-      innerJoin(visitors, schools.id.equalsExp(visitors.regionId),
+      innerJoin(visitors, schools.id.isExp(visitors.schoolId),
           useColumns: false),
     ])
       ..addColumns([amountOfVisitors])
       ..groupBy([schools.id]);
 
     final queryResult = await query.get();
+
 
     final result = Map<School, int>.fromEntries(queryResult.map((row) {
       final sch = row.readTable(schools);
