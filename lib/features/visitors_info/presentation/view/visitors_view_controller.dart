@@ -7,6 +7,8 @@ import 'statistics_view_model.dart';
 abstract class VisitorsViewController {
 
   void addVisitor(VisitorViewModel visitor);
+  void addErrorListener(Function(String? msg) func);
+  void removeErrorListener(Function(String? msg) func);
 
   Future<List<RegionViewModel>> getAllRegions();
   Future<List<DistrictViewModel>> getAllDistricts();

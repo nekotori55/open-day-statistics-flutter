@@ -14,11 +14,11 @@ class VisitorsViewControllerImpl extends VisitorsViewController {
   final List<Function(String? msg)> _errorListeners = [];
 
 
-  void addListener(Function(String? msg) func) {
+  void addErrorListener(Function(String? msg) func) {
     _errorListeners.add(func);
   }
 
-  void removeListener(Function(String? msg) func) {
+  void removeErrorListener(Function(String? msg) func) {
     _errorListeners.remove(func);
   }
 
