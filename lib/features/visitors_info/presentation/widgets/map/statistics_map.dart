@@ -23,12 +23,14 @@ class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateM
 
   Map<String, int> idmap = {};
 
-  @override
-  Future<void> initState() async {
-    _init();
-    
+  updateMap() async {
     idmap = await widget.getIdMap();
+  }
 
+  @override
+  void initState() {
+    _init();
+    updateMap();
     super.initState();
 
     _controller = AnimationController(
