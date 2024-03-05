@@ -5,7 +5,12 @@ import 'models.dart';
 import 'utils.dart';
 
 class StatisticsMap extends StatefulWidget {
-  const StatisticsMap({super.key, required this.mapSvg, required this.centerId, required this.fromPath, required this.getIdMap});
+  const StatisticsMap(
+      {super.key,
+      required this.mapSvg,
+      required this.centerId,
+      required this.fromPath,
+      required this.getIdMap});
 
   final String mapSvg;
   final String centerId;
@@ -17,7 +22,8 @@ class StatisticsMap extends StatefulWidget {
   State<StatisticsMap> createState() => _StatisticsMapState();
 }
 
-class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateMixin {
+class _StatisticsMapState extends State<StatisticsMap>
+    with TickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _controller;
 
@@ -42,7 +48,9 @@ class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateM
 
     _animation = _shift.animate(_controller)
       ..addListener(() {
-        setState(() {});
+        setState(() {
+          updateMap();
+        });
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
@@ -73,12 +81,11 @@ class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateM
       var centerPath = value.pathsList
           .firstWhere((element) => element.id == widget.centerId)
           .path;
-      centerOffset = centerPath
-          .getBounds()
-          .center;
-    }
-    else {
-      centerOffset = value.pointsList.firstWhere((element) => element.id == widget.centerId).offset;
+      centerOffset = centerPath.getBounds().center;
+    } else {
+      centerOffset = value.pointsList
+          .firstWhere((element) => element.id == widget.centerId)
+          .offset;
     }
 
     setState(() {
@@ -109,41 +116,42 @@ class _StatisticsMapState extends State<StatisticsMap> with TickerProviderStateM
                   children: [
                     CustomPaint(painter: PathPainter(_pathsList, scale, 0.5)),
                     CustomPaint(painter: NamePainter(_namesList, scale, 8)),
-                    Builder(
-                        builder: (context) {
-                          if (widget.fromPath) {
-                              return Stack(
-                                children: [
-                                  CustomPaint(painter: PointPainter(_pointsList, scale)),
-                                  CustomPaint(painter:
-                                  LinePainter(
-                                    startPathsList: _pathsList,
-                                    scale: scale,
-                                    endPos: _centerOffset,
-                                    shift: _animation.value,
-                                  )
-                                  ),
-                                  CustomPaint(painter: AmountPainter(_pathsList, scale, 100))
-                                ],
-                              );
-                            }
-                          else {
-                            return Stack(
-                              children: [
-                                CustomPaint(painter:
-                                LinePainter(
-                                  startPointsList: _pointsList,
-                                  scale: scale,
-                                  endPos: _centerOffset,
-                                  shift: _animation.value,
-                                )
-                                ),
-                                CustomPaint(painter: PointPainter(_pointsList, scale)),
-                              ],
-                            );
-                          }
-                        }
-                    ),
+                    Builder(builder: (context) {
+                      if (widget.fromPath) {
+                        return Stack(
+                          children: [
+                            CustomPaint(
+                                painter: PointPainter(_pointsList, scale)),
+                            CustomPaint(
+                                painter: LinePainter(
+                              startPathsList: _pathsList,
+                              scale: scale,
+                              endPos: _centerOffset,
+                              shift: _animation.value,
+                              visitorsNums: idmap,
+                            )),
+                            CustomPaint(
+                                painter:
+                                    AmountPainter(_pathsList, scale, idmap))
+                          ],
+                        );
+                      } else {
+                        return Stack(
+                          children: [
+                            CustomPaint(
+                                painter: LinePainter(
+                              startPointsList: _pointsList,
+                              scale: scale,
+                              endPos: _centerOffset,
+                              shift: _animation.value,
+                              visitorsNums: idmap,
+                            )),
+                            CustomPaint(
+                                painter: PointPainter(_pointsList, scale)),
+                          ],
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),

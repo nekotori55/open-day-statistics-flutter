@@ -94,7 +94,14 @@ class NamePainter extends CustomPainter {
 }
 
 class LinePainter extends CustomPainter {
-  LinePainter({this.startPathsList, this.startPointsList, required this.scale, required this.endPos, required this.shift});
+  LinePainter({
+    this.startPathsList,
+    this.startPointsList,
+    required this.scale,
+    required this.endPos,
+    required this.shift,
+    required this.visitorsNums,
+  });
 
   final List<MapPath>? startPathsList;
   final List<MapPoint>? startPointsList;
@@ -102,6 +109,7 @@ class LinePainter extends CustomPainter {
   final double scale;
   final Offset endPos;
   final double shift;
+  final Map<String, int> visitorsNums;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -111,16 +119,21 @@ class LinePainter extends CustomPainter {
     paint.color = Color(0xFF3892f6);
 
     bool fromPaths = (startPathsList != null);
-    int? iterationsNum = fromPaths ? startPathsList!.length : startPointsList!.length;
-
+    int? iterationsNum =
+        fromPaths ? startPathsList!.length : startPointsList!.length;
 
     for (int i = 0; i < iterationsNum; i++) {
       Offset startPos;
       if (fromPaths) {
+        if (visitorsNums[startPathsList![i].id] == null) {
+          continue;
+        }
         Path path = startPathsList![i].path;
         startPos = path.getBounds().center;
-      }
-      else {
+      } else {
+        if (visitorsNums[startPointsList![i].id] == null) {
+          continue;
+        }
         startPos = startPointsList![i].offset;
       }
 
@@ -132,8 +145,10 @@ class LinePainter extends CustomPainter {
       double spaceLength = 5.0;
       double stepLength = lineLength + spaceLength;
 
-      if (shift > spaceLength && (curPos - startPos).distance < drawVector.distance) {
-        canvas.drawLine(curPos, curPos + (moveVector * (shift - spaceLength)), paint);
+      if (shift > spaceLength &&
+          (curPos - startPos).distance < drawVector.distance) {
+        canvas.drawLine(
+            curPos, curPos + (moveVector * (shift - spaceLength)), paint);
       }
       curPos = curPos + (moveVector * shift);
 
@@ -150,11 +165,11 @@ class LinePainter extends CustomPainter {
 }
 
 class AmountPainter extends CustomPainter {
-  const AmountPainter(this._subjectPaths, this._scale, this._visitorsNum);
+  const AmountPainter(this._subjectPaths, this._scale, this._visitorsNums);
 
   final List<MapPath> _subjectPaths;
   final double _scale;
-  final int _visitorsNum;
+  final Map<String, int> _visitorsNums;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -162,22 +177,23 @@ class AmountPainter extends CustomPainter {
     final paint = Paint();
     paint.color = Color(0xFF3892f6);
 
-    double fontSize = 15 + log(_visitorsNum * _visitorsNum);
-
-    var textStyle = TextStyle(
-      color: Colors.white,
-      fontSize: fontSize,
-      fontWeight: FontWeight.w600,
-    );
-
     for (MapPath subjectPath in _subjectPaths) {
+      var visitorsNum = _visitorsNums[subjectPath.id];
+      if (visitorsNum == null) {
+        continue;
+      }
       Path path = subjectPath.path;
       Offset center = path.getBounds().center;
 
-      canvas.drawCircle(center, 10 + log(_visitorsNum * _visitorsNum), paint);
+      canvas.drawCircle(center, 10 + log(visitorsNum * visitorsNum), paint);
 
+      var textStyle = TextStyle(
+        color: Colors.white,
+        fontSize: 15 + log(visitorsNum * visitorsNum),
+        fontWeight: FontWeight.w600,
+      );
       var textSpan = TextSpan(
-        text: _visitorsNum.toString(),
+        text: _visitorsNums[subjectPath.id].toString(),
         style: textStyle,
       );
       var textPainter = TextPainter(
@@ -185,7 +201,10 @@ class AmountPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(center.dx - textPainter.width * 0.5, center.dy - textPainter.height * 0.5));
+      textPainter.paint(
+          canvas,
+          Offset(center.dx - textPainter.width * 0.5,
+              center.dy - textPainter.height * 0.55));
     }
   }
 

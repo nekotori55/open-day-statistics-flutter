@@ -37,15 +37,13 @@ class MainPage extends StatelessWidget {
                         .map((key, value) => MapEntry(key.id, value));
                   },
                 ),
-                StatisticsChart(dataMap: {
-                  "Flutter": 5,
-                  "React": 3,
-                  "Xamarin": 2,
-                  "Ionic": 2,
-                  "Абоба": 10,
-                  "Боба": 10,
-                  "Оба": 10,
-                }),
+                StatisticsChart(
+                  getIdMap: () async {
+                    var result = await controller.getRegionStatistics();
+                    return (result.total, result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.name, value)));
+                  },
+                ),
               ],
             ),
             Row(
@@ -61,15 +59,13 @@ class MainPage extends StatelessWidget {
                         .map((key, value) => MapEntry(key.id, value));
                   },
                 ),
-                StatisticsChart(dataMap: {
-                  "Flutter": 5,
-                  "React": 3,
-                  "Xamarin": 2,
-                  "Ionic": 2,
-                  "Абоба": 10,
-                  "Боба": 10,
-                  "Оба": 10,
-                }),
+                StatisticsChart(
+                  getIdMap: () async {
+                    var result = await controller.getDistrictStatistics();
+                    return (result.total, result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.name, value)));
+                  },
+                ),
               ],
             ),
             Row(
@@ -85,15 +81,13 @@ class MainPage extends StatelessWidget {
                         .map((key, value) => MapEntry(key.id, value));
                   },
                 ),
-                StatisticsChart(dataMap: {
-                  "Flutter": 5,
-                  "React": 3,
-                  "Xamarin": 2,
-                  "Ionic": 2,
-                  "Абоба": 10,
-                  "Боба": 10,
-                  "Оба": 10,
-                }),
+                StatisticsChart(
+                  getIdMap: () async {
+                    var result = await controller.getSchoolStatistics();
+                    return (result.total, result.subjectToVisitorNumber
+                        .map((key, value) => MapEntry(key.name, value)));
+                  },
+                ),
               ],
             ),
           ],
