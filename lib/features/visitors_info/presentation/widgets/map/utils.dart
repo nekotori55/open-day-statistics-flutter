@@ -3,28 +3,18 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:xml/xml.dart';
 import 'models.dart';
 
-VectorImage getVectorImageFromStringXml(String svgData) {
-  List<SubjectPath> pathsList = [];
-  List<CapitalPoint> pointsList = [];
-  List<CapitalName> namesList = [];
+VectorImage getVectorImage(String svgData) {
+  List<MapPath> pathsList = [];
+  List<MapPoint> pointsList = [];
+  List<MapString> stringsList = [];
 
   XmlDocument document = XmlDocument.parse(svgData);
 
-
-  Size? size;
-  String? width = document
-      .findAllElements('svg')
-      .first
-      .getAttribute('width');
-  String? height = document
-      .findAllElements('svg')
-      .first
-      .getAttribute('height');
+  Size size;
+  String? width = document.findAllElements('svg').first.getAttribute('width');
+  String? height = document.findAllElements('svg').first.getAttribute('height');
   String? viewBox =
-  document
-      .findAllElements('svg')
-      .first
-      .getAttribute('viewBox');
+      document.findAllElements('svg').first.getAttribute('viewBox');
 
   if (width != null && height != null) {
     width = width.replaceAll(RegExp(r'[^0-9.]'), '');
@@ -33,15 +23,16 @@ VectorImage getVectorImageFromStringXml(String svgData) {
   } else if (viewBox != null) {
     List<String> viewBoxList = viewBox.split(' ');
     size = Size(double.parse(viewBoxList[2]), double.parse(viewBoxList[3]));
+  } else {
+    throw ArgumentError("No size?");
   }
-
 
 // Paths
   final List<XmlElement> paths = document.findAllElements('path').toList();
   for (int i = 0; i < paths.length; i++) {
     final XmlElement element = paths[i];
 
-    SubjectPath? path = _getSubjectPath(element);
+    MapPath? path = _getMapPath(element);
 
     if (path != null) {
       pathsList.add(path);
@@ -53,7 +44,7 @@ VectorImage getVectorImageFromStringXml(String svgData) {
   for (int i = 0; i < points.length; i++) {
     final XmlElement element = points[i];
 
-    CapitalPoint? point = _getCapitalPoint(element);
+    MapPoint? point = _getMapPoint(element);
 
     if (point != null) {
       pointsList.add(point);
@@ -65,22 +56,21 @@ VectorImage getVectorImageFromStringXml(String svgData) {
   for (int i = 0; i < names.length; i++) {
     final XmlElement element = names[i];
 
-    CapitalName? name = _getCapitalName(element);
+    MapString? name = _getMapString(element);
 
     if (name != null) {
-      namesList.add(name);
+      stringsList.add(name);
     }
   }
 
   return VectorImage(
       pathsList: pathsList,
       pointsList: pointsList,
-      namesList: namesList,
-      size: size
-  );
+      namesList: stringsList,
+      size: size);
 }
 
-SubjectPath? _getSubjectPath(XmlElement element) {
+MapPath? _getMapPath(XmlElement element) {
   // get the path
   String? pathString = element.getAttribute('d');
   if (pathString == null) {
@@ -98,8 +88,7 @@ SubjectPath? _getSubjectPath(XmlElement element) {
   Color color;
   if (fill == null) {
     color = Colors.transparent;
-  }
-  else {
+  } else {
     color = Color(int.parse(fill.replaceAll("#", "0xFF")));
   }
 
@@ -109,14 +98,14 @@ SubjectPath? _getSubjectPath(XmlElement element) {
     return null;
   }
 
-  return SubjectPath(
+  return MapPath(
     fill: color,
     path: path,
     id: id,
   );
 }
 
-CapitalPoint? _getCapitalPoint(XmlElement element) {
+MapPoint? _getMapPoint(XmlElement element) {
   String? x = element.getAttribute('cx');
   String? y = element.getAttribute('cy');
   String? r = element.getAttribute('r');
@@ -128,13 +117,15 @@ CapitalPoint? _getCapitalPoint(XmlElement element) {
   Offset offset = Offset(double.parse(x), double.parse(y));
   double radius = double.parse(r);
 
-  return CapitalPoint(
-      offset: offset,
-      radius: radius
-  );
+  String? id = element.getAttribute('id');
+  if (id == null) {
+    return null;
+  }
+
+  return MapPoint(offset: offset, radius: radius, id: id);
 }
 
-CapitalName? _getCapitalName(XmlElement element) {
+MapString? _getMapString(XmlElement element) {
   String? x = element.getAttribute('x');
   String? y = element.getAttribute('y');
   String? transform = element.getAttribute('transform');
@@ -158,18 +149,23 @@ CapitalName? _getCapitalName(XmlElement element) {
     }
   }
 
+  Offset offset = Offset(double.parse(x) * scaleX, double.parse(y) * scaleY);
 
-    Offset offset = Offset(double.parse(x) * scaleX, double.parse(y) * scaleY);
-
-    return CapitalName(
-        offset: offset,
-        name: name,
-    );
+  String? id = element.getAttribute('id');
+  if (id == null) {
+    return null;
   }
 
-  String? _getFillColor(String data) {
-    RegExp regExp = RegExp(r'fill:\s*(#[a-fA-F0-9]{6})');
-    RegExpMatch? match = regExp.firstMatch(data);
+  return MapString(
+    offset: offset,
+    name: name,
+    id: id,
+  );
+}
 
-    return match?.group(1);
-  }
+String? _getFillColor(String data) {
+  RegExp regExp = RegExp(r'fill:\s*(#[a-fA-F0-9]{6})');
+  RegExpMatch? match = regExp.firstMatch(data);
+
+  return match?.group(1);
+}

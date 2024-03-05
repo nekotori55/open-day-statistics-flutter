@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SubjectPath {
-  const SubjectPath({
+class MapPath {
+  const MapPath({
     required this.path,
     required this.fill,
     required this.id,
@@ -12,38 +12,43 @@ class SubjectPath {
   final String id;
 }
 
-class CapitalPoint {
-  const CapitalPoint({
+class MapPoint {
+  const MapPoint({
     required this.offset,
     required this.radius,
+    required this.id,
   });
 
   final Offset offset;
   final double radius;
+  final String id;
 }
 
-class CapitalName {
-  const CapitalName({
+class MapString {
+  const MapString({
     required this.offset,
     required this.name,
+    required this.id,
   });
 
   final Offset offset;
   final String name;
+  final String id;
 }
+
 
 class VectorImage {
   const VectorImage({
     required this.pathsList,
     required this.pointsList,
     required this.namesList,
-    this.size,
+    required this.size,
   });
 
-  final List<SubjectPath> pathsList;
-  final List<CapitalPoint> pointsList;
-  final List<CapitalName> namesList;
-  final Size? size;
+  final List<MapPath> pathsList;
+  final List<MapPoint> pointsList;
+  final List<MapString> namesList;
+  final Size size;
 }
 
 

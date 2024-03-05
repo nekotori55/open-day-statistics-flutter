@@ -4,32 +4,34 @@ import 'package:flutter/material.dart';
 import "models.dart";
 
 class PathPainter extends CustomPainter {
-  const PathPainter(this._subjectPath, this._scale, this._strokeWidth);
+  const PathPainter(this._subjectPaths, this._scale, this._strokeWidth);
 
-  final SubjectPath _subjectPath;
+  final List<MapPath> _subjectPaths;
   final double _scale;
   final double _strokeWidth;
 
-
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = _subjectPath.path;
     canvas.scale(_scale, _scale);
-
     final paint = Paint();
-    paint.color = _subjectPath.fill;
-    paint.style = PaintingStyle.fill;
 
-    canvas.drawPath(path, paint);
+    for (MapPath subjectPath in _subjectPaths) {
+      Path path = subjectPath.path;
 
-    paint.color = Colors.black;
-    paint.style = PaintingStyle.stroke;
-    paint.strokeWidth = _strokeWidth;
+      paint.color = subjectPath.fill;
+      paint.style = PaintingStyle.fill;
 
-    canvas.drawPath(path, paint);
+      canvas.drawPath(path, paint);
 
-    paint.color = Colors.blue;
-    paint.style = PaintingStyle.fill;
+      paint.color = Colors.black;
+      paint.style = PaintingStyle.stroke;
+      paint.strokeWidth = _strokeWidth;
+
+      canvas.drawPath(path, paint);
+
+      paint.color = Colors.blue;
+      paint.style = PaintingStyle.fill;
+    }
   }
 
   @override
@@ -37,18 +39,20 @@ class PathPainter extends CustomPainter {
 }
 
 class PointPainter extends CustomPainter {
-  const PointPainter(this.capitalPoint, this.scale);
+  const PointPainter(this._capitalPoints, this._scale);
 
-  final CapitalPoint capitalPoint;
-  final double scale;
+  final List<MapPoint> _capitalPoints;
+  final double _scale;
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.scale(_scale, _scale);
     final paint = Paint();
     paint.color = Colors.black;
 
-    canvas.scale(scale, scale);
-    canvas.drawCircle(capitalPoint.offset, capitalPoint.radius, paint);
+    for (MapPoint capitalPoint in _capitalPoints) {
+      canvas.drawCircle(capitalPoint.offset, capitalPoint.radius, paint);
+    }
   }
 
   @override
@@ -56,33 +60,33 @@ class PointPainter extends CustomPainter {
 }
 
 class NamePainter extends CustomPainter {
-  const NamePainter(this.capitalName, this.scale, this.fontSize);
+  const NamePainter(this._capitalNames, this._scale, this._fontSize);
 
-  final CapitalName capitalName;
-  final double scale;
-  final double fontSize;
+  final List<MapString> _capitalNames;
+  final double _scale;
+  final double _fontSize;
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.scale(_scale, _scale);
     var textStyle = TextStyle(
       color: Colors.black,
-      fontSize: fontSize,
+      fontSize: _fontSize,
       fontWeight: FontWeight.w600,
     );
-    var textSpan = TextSpan(
-      text: capitalName.name,
-      style: textStyle,
-    );
-    var textPainter = TextPainter(
-      text: textSpan,
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout(
-      minWidth: 0,
-      maxWidth: 1000,
-    );
-    canvas.scale(scale);
-    textPainter.paint(canvas, capitalName.offset.translate(0, -fontSize));
+
+    for (MapString capitalName in _capitalNames) {
+      var textSpan = TextSpan(
+        text: capitalName.name,
+        style: textStyle,
+      );
+      var textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, capitalName.offset.translate(0, -_fontSize));
+    }
   }
 
   @override
@@ -90,44 +94,101 @@ class NamePainter extends CustomPainter {
 }
 
 class LinePainter extends CustomPainter {
-  const LinePainter(this._subjectPath, this._scale, this._centerOffcet, this._shift);
+  LinePainter({this.startPathsList, this.startPointsList, required this.scale, required this.endPos, required this.shift});
 
-  final SubjectPath _subjectPath;
-  final double _scale;
-  final Offset _centerOffcet;
-  final double _shift;
+  final List<MapPath>? startPathsList;
+  final List<MapPoint>? startPointsList;
 
+  final double scale;
+  final Offset endPos;
+  final double shift;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = _subjectPath.path;
-    canvas.scale(_scale, _scale);
-
+    canvas.scale(scale, scale);
     final paint = Paint();
-    Offset startPos = path.getBounds().center;
-    Offset endPos = _centerOffcet;
-    Offset curPos = startPos;
-    Offset drawVector = _centerOffcet - startPos;
-    Offset moveVector = drawVector / drawVector.distance;
-
-    double lineLength = 8.0;
-    double spaceLength = 5.0;
-    double stepLength = lineLength + spaceLength;
-
-    curPos = curPos + (moveVector * _shift);
-
     paint.strokeWidth = 1.5;
     paint.color = Color(0xFF3892f6);
 
-    while ((curPos - startPos).distance < drawVector.distance) {
-      var ll = min(lineLength, (curPos - endPos).distance);
-      canvas.drawLine(curPos, curPos + (moveVector * ll), paint);
-      curPos = curPos + (moveVector * stepLength);
-    }
+    bool fromPaths = (startPathsList != null);
+    int? iterationsNum = fromPaths ? startPathsList!.length : startPointsList!.length;
 
-    canvas.drawCircle(startPos, 5, paint);
+
+    for (int i = 0; i < iterationsNum; i++) {
+      Offset startPos;
+      if (fromPaths) {
+        Path path = startPathsList![i].path;
+        startPos = path.getBounds().center;
+      }
+      else {
+        startPos = startPointsList![i].offset;
+      }
+
+      Offset curPos = startPos;
+      Offset drawVector = endPos - startPos;
+      Offset moveVector = drawVector / drawVector.distance;
+
+      double lineLength = 8.0;
+      double spaceLength = 5.0;
+      double stepLength = lineLength + spaceLength;
+
+      if (shift > spaceLength && (curPos - startPos).distance < drawVector.distance) {
+        canvas.drawLine(curPos, curPos + (moveVector * (shift - spaceLength)), paint);
+      }
+      curPos = curPos + (moveVector * shift);
+
+      while ((curPos - startPos).distance < drawVector.distance) {
+        var ll = min(lineLength, (curPos - endPos).distance);
+        canvas.drawLine(curPos, curPos + (moveVector * ll), paint);
+        curPos = curPos + (moveVector * stepLength);
+      }
+    }
   }
 
   @override
   bool shouldRepaint(LinePainter oldDelegate) => true;
+}
+
+class AmountPainter extends CustomPainter {
+  const AmountPainter(this._subjectPaths, this._scale, this._visitorsNum);
+
+  final List<MapPath> _subjectPaths;
+  final double _scale;
+  final int _visitorsNum;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.scale(_scale, _scale);
+    final paint = Paint();
+    paint.color = Color(0xFF3892f6);
+
+    double fontSize = 15 + log(_visitorsNum * _visitorsNum);
+
+    var textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w600,
+    );
+
+    for (MapPath subjectPath in _subjectPaths) {
+      Path path = subjectPath.path;
+      Offset center = path.getBounds().center;
+
+      canvas.drawCircle(center, 10 + log(_visitorsNum * _visitorsNum), paint);
+
+      var textSpan = TextSpan(
+        text: _visitorsNum.toString(),
+        style: textStyle,
+      );
+      var textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(center.dx - textPainter.width * 0.5, center.dy - textPainter.height * 0.5));
+    }
+  }
+
+  @override
+  bool shouldRepaint(AmountPainter oldDelegate) => true;
 }
