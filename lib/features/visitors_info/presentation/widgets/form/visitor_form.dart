@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 import 'dropdown_field.dart';
 
-class VisitorForm extends StatelessWidget {
+class VisitorForm extends StatefulWidget {
   const VisitorForm({super.key, required this.controller});
 
   final VisitorsViewController controller;
+
+  @override
+  State<VisitorForm> createState() => _VisitorFormState();
+}
+
+class _VisitorFormState extends State<VisitorForm> {
+  RegionViewModel? selectedRegion;
+  DistrictViewModel? selectedDistrict;
+  SchoolViewModel? selectedSchool;
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +30,34 @@ class VisitorForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownField(
-                getItems: (s) => controller.getAllRegions(),
-                label: "Регион"),
+              getItems: (s) => widget.controller.getAllRegions(),
+              label: "Регион",
+              onChanged: (model) => setState(() {
+                selectedRegion = model;
+              }),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownField(
-                getItems: (s) => controller.getAllDistricts(),
-                label: "Район"),
+              getItems: (s) => widget.controller.getAllDistricts(),
+              label: "Район",
+              enabled: selectedRegion?.id == "RU-KLU",
+              onChanged: (model) => setState(() {
+                selectedDistrict = model;
+              }),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownField(
-                getItems: (s) => controller.getAllSchools(),
-                label: "Школа"),
+              getItems: (s) => widget.controller.getAllSchools(),
+              label: "Школа",
+              enabled: selectedDistrict?.id == "kl_kal",
+              onChanged: (model) => setState(() {
+                selectedSchool = model;
+              }),
+            ),
           ),
           Padding(
             padding:
@@ -41,7 +68,18 @@ class VisitorForm extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).colorScheme.background,
               ),
-              onPressed: () {},
+              onPressed: (selectedRegion != null) &&
+                      (selectedDistrict != null ||
+                          selectedRegion?.id != "RU-KLU") &&
+                      (selectedSchool != null ||
+                          selectedDistrict?.id != "kl_kal")
+                  ? () {
+                      widget.controller.addVisitor(VisitorViewModel(
+                          district: selectedDistrict,
+                          region: selectedRegion!,
+                          school: selectedSchool));
+                    }
+                  : null,
               child: Text(
                 "Отправить",
                 style: TextStyle(
