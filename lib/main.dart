@@ -6,7 +6,7 @@ import 'features/visitors_info/presentation/manager/app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final repository = VisitorStatisticsRepositoryImpl(datasource: VisitorStatisticsLocalDatasourceImpl);
+  final repository = VisitorStatisticsRepositoryImpl(useCache: true, datasource: VisitorStatisticsLocalDatasourceImpl());
 
   runApp(App(
     repository: repository,

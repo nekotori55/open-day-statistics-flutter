@@ -15,6 +15,11 @@ import 'package:open_day_statistics_flutter/features/visitors_info/data/models/v
 
 class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   final VisitorStatisticsDatasource datasource;
+  final bool useCache;
+
+  List<DistrictEntity>? _districtsCache;
+  List<RegionEntity>? _regionCache;
+  List<SchoolEntity>? _schoolCache;
 
   @override
   Future<ApiResult<Null>> addVisitor(VisitorEntity visitor) {
@@ -28,13 +33,16 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<List<DistrictEntity>>> getAllDistricts() async {
+    if (_districtsCache != null) {
+      return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!);
+    }
 
     var result = await datasource.getAllDistricts();
     switch (result) {
       case Success():
         List<DistrictModel> resultData = result.data;
-        var entitiesList = resultData.map((e) => e.toEntity()).toList();
-        return ApiResult<List<DistrictEntity>>.success(data: entitiesList);
+        _districtsCache = resultData.map((e) => e.toEntity()).toList();
+        return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!);
 
       case Failure():
         return ApiResult<List<DistrictEntity>>.failure(error: result.error);
@@ -46,13 +54,16 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<List<RegionEntity>>> getAllRegions() async {
+    if (_regionCache != null) {
+      return ApiResult<List<RegionEntity>>.success(data: _regionCache!);
+    }
 
     var result = await datasource.getAllRegions();
     switch (result) {
       case Success():
         List<RegionModel> resultData = result.data;
-        var entitiesList = resultData.map((e) => e.toEntity()).toList();
-        return ApiResult<List<RegionEntity>>.success(data: entitiesList);
+        _regionCache = resultData.map((e) => e.toEntity()).toList();
+        return ApiResult<List<RegionEntity>>.success(data: _regionCache!);
 
       case Failure():
         return ApiResult<List<RegionEntity>>.failure(error: result.error);
@@ -64,6 +75,10 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<List<SchoolEntity>>> getAllSchools() async {
+    if (_schoolCache != null) {
+      return ApiResult<List<SchoolEntity>>.success(data: _schoolCache!);
+    }
+
     var result = await datasource.getAllSchools();
     switch (result) {
       case Success():
