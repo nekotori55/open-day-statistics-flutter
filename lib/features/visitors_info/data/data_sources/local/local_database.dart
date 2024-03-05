@@ -177,9 +177,9 @@ class Schools extends Table {
 class Visitors extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get districtId => text().references(Districts, #id)();
+  TextColumn get districtId => text().references(Districts, #id).nullable()();
 
   TextColumn get regionId => text().references(Regions, #id)();
 
-  TextColumn get schoolId => text().references(Schools, #id)();
+  TextColumn get schoolId => text().references(Schools, #id).nullable()();
 }

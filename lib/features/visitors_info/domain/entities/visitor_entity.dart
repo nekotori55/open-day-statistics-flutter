@@ -9,9 +9,9 @@ import 'region_entity.dart';
 class VisitorEntity extends Equatable {
   final RegionEntity region;
 
-  final DistrictEntity district;
+  final DistrictEntity? district;
 
-  final SchoolEntity school;
+  final SchoolEntity? school;
 
 
   const VisitorEntity({

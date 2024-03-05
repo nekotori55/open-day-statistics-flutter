@@ -568,9 +568,9 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
       const VerificationMeta('districtId');
   @override
   late final GeneratedColumn<String> districtId = GeneratedColumn<String>(
-      'district_id', aliasedName, false,
+      'district_id', aliasedName, true,
       type: DriftSqlType.string,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('REFERENCES districts (id)'));
   static const VerificationMeta _regionIdMeta =
@@ -586,9 +586,9 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
       const VerificationMeta('schoolId');
   @override
   late final GeneratedColumn<String> schoolId = GeneratedColumn<String>(
-      'school_id', aliasedName, false,
+      'school_id', aliasedName, true,
       type: DriftSqlType.string,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('REFERENCES schools (id)'));
   @override
@@ -611,8 +611,6 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
           _districtIdMeta,
           districtId.isAcceptableOrUnknown(
               data['district_id']!, _districtIdMeta));
-    } else if (isInserting) {
-      context.missing(_districtIdMeta);
     }
     if (data.containsKey('region_id')) {
       context.handle(_regionIdMeta,
@@ -623,8 +621,6 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
     if (data.containsKey('school_id')) {
       context.handle(_schoolIdMeta,
           schoolId.isAcceptableOrUnknown(data['school_id']!, _schoolIdMeta));
-    } else if (isInserting) {
-      context.missing(_schoolIdMeta);
     }
     return context;
   }
@@ -638,11 +634,11 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       districtId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}district_id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}district_id']),
       regionId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}region_id'])!,
       schoolId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}school_id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}school_id']),
     );
   }
 
@@ -654,30 +650,38 @@ class $VisitorsTable extends Visitors with TableInfo<$VisitorsTable, Visitor> {
 
 class Visitor extends DataClass implements Insertable<Visitor> {
   final int id;
-  final String districtId;
+  final String? districtId;
   final String regionId;
-  final String schoolId;
+  final String? schoolId;
   const Visitor(
       {required this.id,
-      required this.districtId,
+      this.districtId,
       required this.regionId,
-      required this.schoolId});
+      this.schoolId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['district_id'] = Variable<String>(districtId);
+    if (!nullToAbsent || districtId != null) {
+      map['district_id'] = Variable<String>(districtId);
+    }
     map['region_id'] = Variable<String>(regionId);
-    map['school_id'] = Variable<String>(schoolId);
+    if (!nullToAbsent || schoolId != null) {
+      map['school_id'] = Variable<String>(schoolId);
+    }
     return map;
   }
 
   VisitorsCompanion toCompanion(bool nullToAbsent) {
     return VisitorsCompanion(
       id: Value(id),
-      districtId: Value(districtId),
+      districtId: districtId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(districtId),
       regionId: Value(regionId),
-      schoolId: Value(schoolId),
+      schoolId: schoolId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(schoolId),
     );
   }
 
@@ -686,9 +690,9 @@ class Visitor extends DataClass implements Insertable<Visitor> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Visitor(
       id: serializer.fromJson<int>(json['id']),
-      districtId: serializer.fromJson<String>(json['districtId']),
+      districtId: serializer.fromJson<String?>(json['districtId']),
       regionId: serializer.fromJson<String>(json['regionId']),
-      schoolId: serializer.fromJson<String>(json['schoolId']),
+      schoolId: serializer.fromJson<String?>(json['schoolId']),
     );
   }
   @override
@@ -696,19 +700,22 @@ class Visitor extends DataClass implements Insertable<Visitor> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'districtId': serializer.toJson<String>(districtId),
+      'districtId': serializer.toJson<String?>(districtId),
       'regionId': serializer.toJson<String>(regionId),
-      'schoolId': serializer.toJson<String>(schoolId),
+      'schoolId': serializer.toJson<String?>(schoolId),
     };
   }
 
   Visitor copyWith(
-          {int? id, String? districtId, String? regionId, String? schoolId}) =>
+          {int? id,
+          Value<String?> districtId = const Value.absent(),
+          String? regionId,
+          Value<String?> schoolId = const Value.absent()}) =>
       Visitor(
         id: id ?? this.id,
-        districtId: districtId ?? this.districtId,
+        districtId: districtId.present ? districtId.value : this.districtId,
         regionId: regionId ?? this.regionId,
-        schoolId: schoolId ?? this.schoolId,
+        schoolId: schoolId.present ? schoolId.value : this.schoolId,
       );
   @override
   String toString() {
@@ -735,9 +742,9 @@ class Visitor extends DataClass implements Insertable<Visitor> {
 
 class VisitorsCompanion extends UpdateCompanion<Visitor> {
   final Value<int> id;
-  final Value<String> districtId;
+  final Value<String?> districtId;
   final Value<String> regionId;
-  final Value<String> schoolId;
+  final Value<String?> schoolId;
   const VisitorsCompanion({
     this.id = const Value.absent(),
     this.districtId = const Value.absent(),
@@ -746,12 +753,10 @@ class VisitorsCompanion extends UpdateCompanion<Visitor> {
   });
   VisitorsCompanion.insert({
     this.id = const Value.absent(),
-    required String districtId,
+    this.districtId = const Value.absent(),
     required String regionId,
-    required String schoolId,
-  })  : districtId = Value(districtId),
-        regionId = Value(regionId),
-        schoolId = Value(schoolId);
+    this.schoolId = const Value.absent(),
+  }) : regionId = Value(regionId);
   static Insertable<Visitor> custom({
     Expression<int>? id,
     Expression<String>? districtId,
@@ -768,9 +773,9 @@ class VisitorsCompanion extends UpdateCompanion<Visitor> {
 
   VisitorsCompanion copyWith(
       {Value<int>? id,
-      Value<String>? districtId,
+      Value<String?>? districtId,
       Value<String>? regionId,
-      Value<String>? schoolId}) {
+      Value<String?>? schoolId}) {
     return VisitorsCompanion(
       id: id ?? this.id,
       districtId: districtId ?? this.districtId,

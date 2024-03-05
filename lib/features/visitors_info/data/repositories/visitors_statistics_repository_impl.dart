@@ -25,8 +25,8 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   Future<ApiResult<Null>> addVisitor(VisitorEntity visitor) {
     var visitorModel = VisitorModel(
         regionID: visitor.region.id,
-        districtID: visitor.district.id,
-        schoolID: visitor.school.id);
+        districtID: visitor.district?.id,
+        schoolID: visitor.school?.id);
 
     return datasource.addVisitor(visitorModel);
   }

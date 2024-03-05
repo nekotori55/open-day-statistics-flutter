@@ -10,21 +10,21 @@ class VisitorViewModel extends ViewModel {
 
   factory VisitorViewModel.fromEntity(VisitorEntity entity) {
     return VisitorViewModel(
-        district: DistrictViewModel.fromEntity(entity.district),
+        district: entity.district != null ? DistrictViewModel.fromEntity(entity.district!) : null,
         region: RegionViewModel.fromEntity(entity.region),
-        school: SchoolViewModel.fromEntity(entity.school));
+        school: entity.school != null ? SchoolViewModel.fromEntity(entity.school!) : null);
   }
 
   VisitorEntity toEntity() {
     return VisitorEntity(
         region: region.toEntity(),
-        district: district.toEntity(),
-        school: school.toEntity());
+        district: district?.toEntity(),
+        school: school?.toEntity());
   }
 
-  final DistrictViewModel district;
+  final DistrictViewModel? district;
   final RegionViewModel region;
-  final SchoolViewModel school;
+  final SchoolViewModel? school;
 
   @override
   String toStringByName() {

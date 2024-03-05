@@ -2,9 +2,9 @@
 class VisitorModel {
   final String regionID;
 
-  final String districtID;
+  final String? districtID;
 
-  final String schoolID;
+  final String? schoolID;
 
 
   VisitorModel({
