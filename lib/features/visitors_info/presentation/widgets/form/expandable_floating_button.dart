@@ -15,8 +15,20 @@ class ExpandableFloatingButton extends StatefulWidget {
   State<ExpandableFloatingButton> createState() => _ExpandableFloatingButtonState();
 }
 
-class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> {
+class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> with SingleTickerProviderStateMixin {
   bool expanded = false;
+  late AnimationController controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +43,11 @@ class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> {
           onPressed: () {
             setState(() {
               expanded = !expanded;
+              if (expanded) {
+                controller.forward();
+              } else {
+                controller.reverse();
+              }
             });
           },
           label: Row(
@@ -53,7 +70,12 @@ class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> {
                   )),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Icon(expanded ? Icons.close : Icons.person_add),
+                // child: Icon(expanded ? Icons.close : Icons.person_add),
+                child: AnimatedIcon(
+                  icon: AnimatedIcons.menu_close,
+                  progress: animation,
+                  // size: 4.0,
+                ),
               ),
             ],
           ),
