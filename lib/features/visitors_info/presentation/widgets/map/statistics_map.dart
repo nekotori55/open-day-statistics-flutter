@@ -99,66 +99,62 @@ class _StatisticsMapState extends State<StatisticsMap>
 
   @override
   Widget build(BuildContext context) {
-    return InteractiveViewer(
-      scaleFactor: 1000,
-      maxScale: 10,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          double scale = constraints.maxWidth < constraints.maxHeight
-              ? constraints.maxWidth / _size.width
-              : constraints.maxHeight / _size.height;
-          return Center(
-            child: RepaintBoundary(
-              child: SizedBox(
-                width: _size.width * scale,
-                height: _size.height * scale,
-                child: Stack(
-                  children: [
-                    CustomPaint(painter: PathPainter(_pathsList, scale, 0.5)),
-                    CustomPaint(painter: NamePainter(_namesList, scale, 8)),
-                    Builder(builder: (context) {
-                      if (widget.fromPath) {
-                        return Stack(
-                          children: [
-                            CustomPaint(
-                                painter: PointPainter(_pointsList, scale)),
-                            CustomPaint(
-                                painter: LinePainter(
-                              startPathsList: _pathsList,
-                              scale: scale,
-                              endPos: _centerOffset,
-                              shift: _animation.value,
-                              visitorsNums: idmap,
-                            )),
-                            CustomPaint(
-                                painter:
-                                    AmountPainter(_pathsList, scale, idmap))
-                          ],
-                        );
-                      } else {
-                        return Stack(
-                          children: [
-                            CustomPaint(
-                                painter: LinePainter(
-                              startPointsList: _pointsList,
-                              scale: scale,
-                              endPos: _centerOffset,
-                              shift: _animation.value,
-                              visitorsNums: idmap,
-                            )),
-                            CustomPaint(
-                                painter: PointPainter(_pointsList, scale)),
-                          ],
-                        );
-                      }
-                    }),
-                  ],
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double scale = constraints.maxWidth < constraints.maxHeight
+            ? constraints.maxWidth / _size.width
+            : constraints.maxHeight / _size.height;
+        return Center(
+          child: RepaintBoundary(
+            child: SizedBox(
+              width: _size.width * scale,
+              height: _size.height * scale,
+              child: Stack(
+                children: [
+                  CustomPaint(painter: PathPainter(_pathsList, scale, 0.5)),
+                  CustomPaint(painter: NamePainter(_namesList, scale, 8)),
+                  Builder(builder: (context) {
+                    if (widget.fromPath) {
+                      return Stack(
+                        children: [
+                          CustomPaint(
+                              painter: PointPainter(_pointsList, scale)),
+                          CustomPaint(
+                              painter: LinePainter(
+                            startPathsList: _pathsList,
+                            scale: scale,
+                            endPos: _centerOffset,
+                            shift: _animation.value,
+                            visitorsNums: idmap,
+                          )),
+                          CustomPaint(
+                              painter:
+                                  AmountPainter(_pathsList, scale, idmap))
+                        ],
+                      );
+                    } else {
+                      return Stack(
+                        children: [
+                          CustomPaint(
+                              painter: LinePainter(
+                            startPointsList: _pointsList,
+                            scale: scale,
+                            endPos: _centerOffset,
+                            shift: _animation.value,
+                            visitorsNums: idmap,
+                          )),
+                          CustomPaint(
+                              painter: PointPainter(_pointsList, scale)),
+                        ],
+                      );
+                    }
+                  }),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
