@@ -14,23 +14,28 @@ class PathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     final paint = Paint();
+    paint.strokeWidth = _strokeWidth;
 
     for (MapPath subjectPath in _subjectPaths) {
       Path path = subjectPath.path;
 
-      paint.color = subjectPath.fill;
-      paint.style = PaintingStyle.fill;
+      if (subjectPath.isDisplay == false) {
+        paint.color = Colors.grey;
+        paint.style = PaintingStyle.stroke;
 
-      canvas.drawPath(path, paint);
+        canvas.drawPath(path, paint);
+      }
+      else {
+        paint.color = subjectPath.fill;
+        paint.style = PaintingStyle.fill;
 
-      paint.color = Colors.black;
-      paint.style = PaintingStyle.stroke;
-      paint.strokeWidth = _strokeWidth;
+        canvas.drawPath(path, paint);
 
-      canvas.drawPath(path, paint);
+        paint.color = Colors.black;
+        paint.style = PaintingStyle.stroke;
 
-      paint.color = Colors.blue;
-      paint.style = PaintingStyle.fill;
+        canvas.drawPath(path, paint);
+      }
     }
   }
 

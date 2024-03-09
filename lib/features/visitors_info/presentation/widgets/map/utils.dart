@@ -80,9 +80,11 @@ MapPath? _getMapPath(XmlElement element) {
 
   // get the fill color
   String? fill = element.getAttribute('fill');
+  bool display = true;
   String? style = element.getAttribute('style');
   if (style != null) {
     fill = _getFillColor(style);
+    display = !style.contains("display:none");
   }
 
   Color color;
@@ -102,6 +104,7 @@ MapPath? _getMapPath(XmlElement element) {
     fill: color,
     path: path,
     id: id,
+    isDisplay: display,
   );
 }
 
