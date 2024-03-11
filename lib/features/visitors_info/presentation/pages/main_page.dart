@@ -5,7 +5,6 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
-
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
@@ -75,38 +74,44 @@ class _MainPageState extends State<MainPage>
                 InteractiveViewer(
                   scaleFactor: 1000,
                   maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: RussiaSvg,
+                          centerId: "RU-KLU",
+                          fromPath: true,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getRegionStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsMap(
-                        mapSvg: RussiaSvg,
-                        centerId: "RU-KLU",
-                        fromPath: true,
+                      StatisticsChart(
                         getIdMap: () async {
                           var result =
                               await widget.controller.getRegionStatistics();
-                          return result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.id, value));
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
                         },
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    StatisticsChart(
-                      getIdMap: () async {
-                        var result =
-                            await widget.controller.getRegionStatistics();
-                        return (
-                          result.total,
-                          result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.name, value))
-                        );
-                      },
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -117,38 +122,44 @@ class _MainPageState extends State<MainPage>
                 InteractiveViewer(
                   scaleFactor: 1000,
                   maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: KlSubSvg,
+                          centerId: "kl_kal",
+                          fromPath: true,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getDistrictStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsMap(
-                        mapSvg: KlSubSvg,
-                        centerId: "kl_kal",
-                        fromPath: true,
+                      StatisticsChart(
                         getIdMap: () async {
                           var result =
                               await widget.controller.getDistrictStatistics();
-                          return result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.id, value));
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
                         },
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    StatisticsChart(
-                      getIdMap: () async {
-                        var result =
-                            await widget.controller.getDistrictStatistics();
-                        return (
-                          result.total,
-                          result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.name, value))
-                        );
-                      },
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -159,38 +170,44 @@ class _MainPageState extends State<MainPage>
                 InteractiveViewer(
                   scaleFactor: 1000,
                   maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: KlCitySvg,
+                          centerId: "0",
+                          fromPath: false,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getSchoolStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsMap(
-                        mapSvg: KlCitySvg,
-                        centerId: "0",
-                        fromPath: false,
+                      StatisticsChart(
                         getIdMap: () async {
                           var result =
                               await widget.controller.getSchoolStatistics();
-                          return result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.id, value));
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
                         },
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    StatisticsChart(
-                      getIdMap: () async {
-                        var result =
-                            await widget.controller.getSchoolStatistics();
-                        return (
-                          result.total,
-                          result.subjectToVisitorNumber
-                              .map((key, value) => MapEntry(key.name, value))
-                        );
-                      },
-                    ),
-                  ],
                 )
               ],
             ),
