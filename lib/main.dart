@@ -8,12 +8,15 @@ import 'features/visitors_info/presentation/manager/app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final repository = VisitorStatisticsRepositoryImpl(useCache: true, datasource: VisitorStatisticsLocalDatasourceImpl());
+  final ds = VisitorStatisticsLocalDatasourceImpl();
+  final repository = VisitorStatisticsRepositoryImpl(useCache: true, datasource: ds);
   final VisitorsViewController controller = VisitorsViewControllerImpl(repository: repository);
 
   runApp(App(
     controller: controller,
   ));
+
+  ds.closeConnection();
 }
 
 
