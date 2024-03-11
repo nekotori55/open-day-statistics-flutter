@@ -1,5 +1,4 @@
 import 'package:open_day_statistics_flutter/core/common_domain/api_result.dart';
-import 'package:open_day_statistics_flutter/core/common_domain/error_result.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/data_sources/visitor_statistics_datasource.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/models/district_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/data/models/region_model.dart';
@@ -17,9 +16,9 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   final VisitorStatisticsDatasource datasource;
   final bool useCache;
 
-  List<DistrictEntity>? _districtsCache;
-  List<RegionEntity>? _regionCache;
-  List<SchoolEntity>? _schoolCache;
+  Map<String, DistrictEntity>? _districtsCache;
+  Map<String, RegionEntity>? _regionCache;
+  Map<String, SchoolEntity>? _schoolCache;
 
   @override
   Future<ApiResult<Null>> addVisitor(VisitorEntity visitor) {
@@ -34,15 +33,15 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   @override
   Future<ApiResult<List<DistrictEntity>>> getAllDistricts() async {
     if (_districtsCache != null) {
-      return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!);
+      return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!.values.toList());
     }
 
     var result = await datasource.getAllDistricts();
     switch (result) {
       case Success():
         List<DistrictModel> resultData = result.data;
-        _districtsCache = resultData.map((e) => e.toEntity()).toList();
-        return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!);
+        _districtsCache = Map.fromEntries(resultData.map((e) => MapEntry(e.id, e.toEntity())));
+        return ApiResult<List<DistrictEntity>>.success(data: _districtsCache!.values.toList());
 
       case Failure():
         return ApiResult<List<DistrictEntity>>.failure(error: result.error);
@@ -55,15 +54,15 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   @override
   Future<ApiResult<List<RegionEntity>>> getAllRegions() async {
     if (_regionCache != null) {
-      return ApiResult<List<RegionEntity>>.success(data: _regionCache!);
+      return ApiResult<List<RegionEntity>>.success(data: _regionCache!.values.toList());
     }
 
     var result = await datasource.getAllRegions();
     switch (result) {
       case Success():
         List<RegionModel> resultData = result.data;
-        _regionCache = resultData.map((e) => e.toEntity()).toList();
-        return ApiResult<List<RegionEntity>>.success(data: _regionCache!);
+        _regionCache = Map.fromEntries(resultData.map((e) => MapEntry(e.id, e.toEntity())));
+        return ApiResult<List<RegionEntity>>.success(data: _regionCache!.values.toList());
 
       case Failure():
         return ApiResult<List<RegionEntity>>.failure(error: result.error);
@@ -76,15 +75,15 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
   @override
   Future<ApiResult<List<SchoolEntity>>> getAllSchools() async {
     if (_schoolCache != null) {
-      return ApiResult<List<SchoolEntity>>.success(data: _schoolCache!);
+      return ApiResult<List<SchoolEntity>>.success(data: _schoolCache!.values.toList());
     }
 
     var result = await datasource.getAllSchools();
     switch (result) {
       case Success():
         List<SchoolModel> resultData = result.data;
-        var entitiesList = resultData.map((e) => e.toEntity()).toList();
-        return ApiResult<List<SchoolEntity>>.success(data: entitiesList);
+        _schoolCache = Map.fromEntries(resultData.map((e) => MapEntry(e.id, e.toEntity())));;
+        return ApiResult<List<SchoolEntity>>.success(data: _schoolCache!.values.toList());
 
       case Failure():
         return ApiResult<List<SchoolEntity>>.failure(error: result.error);
@@ -96,6 +95,10 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<DistrictEntity>> getDistrictByID(String id) async {
+    if (_districtsCache != null && _districtsCache![id] != null) {
+      return ApiResult<DistrictEntity>.success(data: _districtsCache![id]!);
+    }
+
     var result = await datasource.getDistrictByID(id);
     switch (result) {
       case Success():
@@ -143,6 +146,10 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<RegionEntity>> getRegionByID(String id) async {
+    if (_regionCache != null && _regionCache![id] != null) {
+      return ApiResult<RegionEntity>.success(data: _regionCache![id]!);
+    }
+
     var result = await datasource.getRegionByID(id);
     switch (result) {
       case Success():
@@ -190,6 +197,10 @@ class VisitorStatisticsRepositoryImpl extends VisitorStatisticsRepository {
 
   @override
   Future<ApiResult<SchoolEntity>> getSchoolByID(String id) async {
+    if (_schoolCache != null && _schoolCache![id] != null) {
+      return ApiResult<SchoolEntity>.success(data: _schoolCache![id]!);
+    }
+
     var result = await datasource.getSchoolByID(id);
     switch (result) {
       case Success():
