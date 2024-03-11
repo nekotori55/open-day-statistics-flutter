@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/bmstu_icon.dart';
 
 import 'svg_painter.dart';
 import 'models.dart';
@@ -144,7 +145,12 @@ class _StatisticsMapState extends State<StatisticsMap>
                             visitorsNums: idmap,
                           )),
                           CustomPaint(
-                              painter: PointPainter(_pointsList, scale)),
+                              painter: SchoolPainter(_pointsList, scale, idmap)
+                          ),
+                          CustomPaint(
+                            size: Size(73.333,   83.333),
+                            painter: RPSCustomPainter(_pointsList[0].offset, scale),
+                          )
                         ],
                       );
                     }

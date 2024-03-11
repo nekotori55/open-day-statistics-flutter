@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import "models.dart";
@@ -24,8 +25,7 @@ class PathPainter extends CustomPainter {
         paint.style = PaintingStyle.stroke;
 
         canvas.drawPath(path, paint);
-      }
-      else {
+      } else {
         paint.color = subjectPath.fill;
         paint.style = PaintingStyle.fill;
 
@@ -215,4 +215,77 @@ class AmountPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(AmountPainter oldDelegate) => true;
+}
+
+class SchoolPainter extends CustomPainter {
+  const SchoolPainter(
+    this._capitalPoints,
+    this._scale,
+    this._visitorsNums,
+  );
+
+  final List<MapPoint> _capitalPoints;
+  final double _scale;
+  final Map<String, int> _visitorsNums;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double fontSize = 8;
+    canvas.scale(_scale, _scale);
+    final paint = Paint();
+    paint.color = Colors.blueGrey;
+
+    for (var capitalPoint in _capitalPoints) {
+      var visitorsNum = _visitorsNums[capitalPoint.id];
+      if (visitorsNum == null) {
+        continue;
+      }
+
+      canvas.drawCircle(capitalPoint.offset, fontSize + 2, paint);
+
+      var textSpan = TextSpan(
+        children: [
+          TextSpan(
+            text: '№',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSize / 1.5,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+          TextSpan(
+            text: capitalPoint.id,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+          TextSpan(
+            text: '№',
+            style: TextStyle(
+              color: Colors.transparent,
+              fontSize: fontSize / 4,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+        ],
+      );
+      var textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(
+          canvas,
+          Offset(capitalPoint.offset.dx - textPainter.width * 0.5,
+              capitalPoint.offset.dy - textPainter.height * 0.5));
+    }
+  }
+
+  @override
+  bool shouldRepaint(SchoolPainter oldDelegate) => false;
 }
