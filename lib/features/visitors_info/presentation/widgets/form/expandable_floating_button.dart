@@ -1,21 +1,17 @@
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/dropdown_field.dart';
 
 class ExpandableFloatingButton extends StatefulWidget {
-  const ExpandableFloatingButton({
-    super.key,
-    required this.children
-  });
+  const ExpandableFloatingButton({super.key, required this.child});
 
-  final List<Widget> children;
+  final Widget? child;
 
   @override
-  State<ExpandableFloatingButton> createState() => _ExpandableFloatingButtonState();
+  State<ExpandableFloatingButton> createState() =>
+      _ExpandableFloatingButtonState();
 }
 
-class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> with SingleTickerProviderStateMixin {
+class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton>
+    with SingleTickerProviderStateMixin {
   bool expanded = false;
   late AnimationController controller;
   late Animation<double> animation;
@@ -35,10 +31,12 @@ class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> wit
     return SizedBox(
       height: 70,
       child: FittedBox(
+        fit: BoxFit.fill,
         child: FloatingActionButton.extended(
           clipBehavior: Clip.none,
           extendedIconLabelSpacing: 0,
-          splashColor: Colors.transparent,
+          splashColor: !expanded ? Colors.transparent : null,
+          hoverColor: Colors.transparent,
           extendedPadding: EdgeInsets.zero,
           onPressed: () {
             setState(() {
@@ -61,9 +59,7 @@ class _ExpandableFloatingButtonState extends State<ExpandableFloatingButton> wit
                             AnimatedOpacity(
                               opacity: expanded ? 1 : 0,
                               duration: const Duration(milliseconds: 500),
-                              child: Row(
-                                children: widget.children,
-                              ),
+                              child: widget.child,
                             ),
                           ]
                         : [Container()],

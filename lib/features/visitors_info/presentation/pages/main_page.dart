@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
 
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/pop_up_button.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/visitor_form.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/form_container.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/chart/statistics_chart.dart';
+
+import '../widgets/form/expandable_floating_button.dart';
+import '../widgets/form/location_form.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.controller});
@@ -129,12 +133,44 @@ class _MainPageState extends State<MainPage>
             ),
           ],
         ),
-        floatingActionButton: PopUpButton(
-          form: FormContainer(
-            child: VisitorForm(controller: controller),
-          ),
-        ),
-      ),
+      floatingActionButton: ExpandableFloatingButton(
+          child: MyLittleFormy(
+            label: labels[currentTab],
+            getItems: (_) {
+              switch (currentTab) {
+                case 0:
+                  return widget.controller.getAllRegions();
+                case 1:
+                  return widget.controller.getAllDistricts();
+                case 2:
+                  return widget.controller.getAllSchools();
+                default:
+                  throw ArgumentError();
+              }
+            },
+            onSend: (model) async {
+              late VisitorViewModel visitor;
+
+              final defaultRegion = RegionViewModel(id: "RU-KLU", name: "");
+              final defaultDistrict = DistrictViewModel(id: "kl_kal", name: "");
+
+              if (model == null) return;
+
+              switch (model) {
+                case RegionViewModel():
+                  visitor = VisitorViewModel(
+                      district: null, region: model, school: null);
+                case DistrictViewModel():
+                  visitor = VisitorViewModel(
+                      district: model, region: defaultRegion, school: null);
+                case SchoolViewModel():
+                  visitor = VisitorViewModel(district: defaultDistrict,
+                      region: defaultRegion,
+                      school: model);
+              }
+              await widget.controller.addVisitor(visitor);
+            }
+          )),
     );
   }
 }

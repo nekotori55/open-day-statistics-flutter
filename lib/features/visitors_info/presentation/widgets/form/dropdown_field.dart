@@ -9,13 +9,15 @@ class DropdownField<Model extends ViewModel> extends StatefulWidget {
   final Future<List<Model>> Function(String? s) getItems;
   final Function(Model? model)? onChanged;
   final bool enabled;
-  
+  final GlobalKey<DropdownSearchState> fieldGlobalKey;
+
   const DropdownField({
     super.key,
     required this.getItems,
     required this.label,
     this.onChanged,
     this.enabled = true,
+    required this.fieldGlobalKey,
   });
 
   @override
@@ -28,7 +30,7 @@ class _DropdownFieldState<Model extends ViewModel>
   late Animation<double> _animationValue;
 
   final _userEditTextController = TextEditingController();
-  static const _animationDuration = Duration(milliseconds: 100);
+  static const _animationDuration = Duration(milliseconds: 200);
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _DropdownFieldState<Model extends ViewModel>
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<Model>(
+      key: widget.fieldGlobalKey,
       asyncItems: widget.getItems,
       enabled: widget.enabled,
       itemAsString: (item) => item.toStringByName(),
@@ -48,6 +51,12 @@ class _DropdownFieldState<Model extends ViewModel>
       compareFn: (item1, item2) =>
           item1.toStringByName() == item2.toStringByName(),
       popupProps: PopupProps.menu(
+          itemBuilder: (context, item, isSelected) => Container(
+                padding: const EdgeInsets.all(10),
+                child: InkWell(
+                  child: Text(item.toStringByName()),
+                ),
+              ),
           searchFieldProps: TextFieldProps(
             controller: _userEditTextController,
             decoration: InputDecoration(
@@ -56,7 +65,6 @@ class _DropdownFieldState<Model extends ViewModel>
                 builder: (context, v, c) => IconButton(
                   icon: const Icon(Icons.clear),
                   enableFeedback: false,
-                  // color: Theme.of(context).disabledColor,
                   onPressed: _userEditTextController.value.text.isNotEmpty
                       ? () => _userEditTextController.clear()
                       : null,
@@ -65,23 +73,42 @@ class _DropdownFieldState<Model extends ViewModel>
             ),
           ),
           menuProps: MenuProps(
-            animation: _animationController,
-            animationDuration: _animationDuration,
+            positionCallback: (popupButtonObject, overlay) {
+
+              var blm = popupButtonObject.size.topLeft(Offset(0, -popupButtonObject.size.height * 7));
+              var brm = popupButtonObject.size.topRight(Offset(0, -popupButtonObject.size.height * 7));
+
+              var rect = RelativeRect.fromSize(
+                  Rect.fromPoints(
+                    popupButtonObject.localToGlobal(blm, ancestor: overlay),
+                    popupButtonObject.localToGlobal(brm, ancestor: overlay),
+                  ),
+                  Size(overlay.size.width, overlay.size.height),
+                );
+
+              // rect = rect.shift(Offset(0, rect.bottom - rect.top));
+
+              return rect;
+            },
+            borderRadius: BorderRadius.circular(20),
+            // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             backgroundColor: Colors.transparent,
+
             shadowColor: Colors.transparent,
+            barrierDismissible: true,
           ),
           showSearchBox: true,
           showSelectedItems: true,
-          searchDelay: Duration.zero,
-          onDismissed: () => _animationController.reverse(),
+          searchDelay: const Duration(milliseconds: 100),
+          onDismissed: () {
+            _animationController.reverse();
+          },
           containerBuilder: (context, child) => FadeTransition(
                 opacity: _animationValue,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(20)),
-                    color: Theme.of(context).colorScheme.background,
-                  ),
+                child: Material(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  shadowColor: Theme.of(context).colorScheme.error,
+                  borderRadius: BorderRadius.circular(20),
                   child: child,
                 ),
               ),
@@ -92,17 +119,23 @@ class _DropdownFieldState<Model extends ViewModel>
                       : "По запросу ничего не найдено",
                   style: const TextStyle(fontSize: 18, color: Colors.grey)))),
       dropdownDecoratorProps: DropDownDecoratorProps(
+        textAlignVertical: TextAlignVertical.top,
         baseStyle: const TextStyle(
-            fontSize: 20,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
-            height: 1.5,
+            height: null,
             overflow: TextOverflow.ellipsis),
         dropdownSearchDecoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          // contentPadding: EdgeInsets.all(8),
+          isDense: true,
           labelText: widget.label,
           labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: 18,
-          ),
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 14,
+              height: 0.4),
         ),
       ),
       onBeforePopupOpening: (_) {
