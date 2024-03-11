@@ -1,4 +1,3 @@
-import 'package:open_day_statistics_flutter/features/visitors_info/domain/entities/school_entity.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/domain/entities/statistics_entity.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/base_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
@@ -27,7 +26,7 @@ class StatisticsViewModel<SubjectType extends ViewModel> extends ViewModel {
         viewToNum = entity.subjectToVisitorsNumber.map((key, value) => MapEntry(DistrictViewModel.fromEntity(key), value));
       case SchoolViewModel:
         viewToNum = entity.subjectToVisitorsNumber.map((key, value) => MapEntry(SchoolViewModel.fromEntity(key), value));
-      default: print(type);
+      default: throw ArgumentError("Invalid type");
     }
 
     return StatisticsViewModel(subjectToVisitorNumber: viewToNum, total:entity.getTotal());

@@ -13,6 +13,10 @@ class VisitorStatisticsLocalDatasourceImpl
     implements VisitorStatisticsDatasource {
   var database = AppDatabase();
 
+  void closeConnection() {
+    database.close();
+  }
+
   @override
   Future<ApiResult<Null>> addVisitor(VisitorModel visitor) async {
     try {
