@@ -31,12 +31,12 @@ class Titles extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 90,
           width: 40,
           child: VerticalDivider(),
         ),
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
