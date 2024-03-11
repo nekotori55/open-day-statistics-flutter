@@ -6,7 +6,7 @@ import 'statistics_view_model.dart';
 
 abstract class VisitorsViewController {
 
-  void addVisitor(VisitorViewModel visitor);
+  Future<void> addVisitor(VisitorViewModel visitor);
   void addErrorListener(Function(String? msg) func);
   void removeErrorListener(Function(String? msg) func);
 
