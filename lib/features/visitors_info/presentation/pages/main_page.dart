@@ -1,20 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/statistics-charts/statistics_charts.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/pie-chart/visitors_pie_chart.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/expandable_floating_button.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/location_form.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/leaders-table/leaders-table.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/pie-chart/visitors_pie_chart.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({super.key, required this.controller});
@@ -133,30 +132,7 @@ class _MainPageState extends State<MainPage>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              height: 300,
-                              child: VisitorsPieChart(data: regionData)),
-                          Container(
-                            color: Colors.white,
-                            child: LeadersTable(
-                              border: TableBorder.all(
-                                  width: 1,
-                              color: Colors.grey),
-                              label: labels[0],
-                              data: regionData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: StatisticsCharts(data: regionData, label: labels[0],)
                 ),
               ],
             ),
@@ -189,30 +165,7 @@ class _MainPageState extends State<MainPage>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              height: 300,
-                              child: VisitorsPieChart(data: districtData)),
-                          Container(
-                            color: Colors.white,
-                            child: LeadersTable(
-                              border: TableBorder.all(
-                                  width: 1,
-                                  color: Colors.grey),
-                              label: labels[1],
-                              data: districtData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: StatisticsCharts(data: districtData, label: labels[1]),
                 ),
               ],
             ),
@@ -245,30 +198,7 @@ class _MainPageState extends State<MainPage>
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              height: 300,
-                              child: VisitorsPieChart(data: schoolData)),
-                          Container(
-                            color: Colors.white,
-                            child: LeadersTable(
-                              border: TableBorder.all(
-                                  width: 1,
-                                  color: Colors.grey),
-                              label: labels[2],
-                              data: schoolData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: StatisticsCharts(data: schoolData, label: labels[2],)
                 )
               ],
             ),
