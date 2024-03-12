@@ -35,28 +35,40 @@ class VisitorsPieChart extends StatelessWidget {
             PieChartData(
               centerSpaceRadius: 50,
               sectionsSpace: 0.5,
-              sections: [
-                    PieChartSectionData(
-                      value: 0.001,
-                      showTitle: true,
-                      title: "Всего: ${data.total}",
-                      titlePositionPercentageOffset: -1.2,
-                      titleStyle:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                    )
-                  ] +
-                  myData.map((e) {
-                    var percentage = (e.value / data.total * 100);
-                    return PieChartSectionData(
-                      value: e.value.toDouble(),
-                      color: _generatePastelColor(e.key.hashCode),
-                      showTitle: percentage >= 5.0,
-                      title: "${percentage.toStringAsFixed(0)}%",
-                      radius: 70,
-                      titleStyle:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                    );
-                  }).toList(),
+              sections: data.total == 0
+                  ? [
+                      PieChartSectionData(
+                        value: 1,
+                        title: "Нет данных",
+                        titlePositionPercentageOffset: -0.72,
+                        radius: 70,
+                        color: Colors.blueGrey,
+                        titleStyle: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 20),
+                      )
+                    ]
+                  : [
+                        PieChartSectionData(
+                          value: 0.001,
+                          showTitle: true,
+                          title: "Всего: ${data.total}",
+                          titlePositionPercentageOffset: -1.2,
+                          titleStyle: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 20),
+                        )
+                      ] +
+                      myData.map((e) {
+                        var percentage = (e.value / data.total * 100);
+                        return PieChartSectionData(
+                          value: e.value.toDouble(),
+                          color: _generatePastelColor(e.key.hashCode),
+                          showTitle: percentage >= 5.0,
+                          title: "${percentage.toStringAsFixed(0)}%",
+                          radius: 70,
+                          titleStyle: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 20),
+                        );
+                      }).toList(),
             ),
           ),
         ),
@@ -66,31 +78,36 @@ class VisitorsPieChart extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: myData.take(min(5, myData.length)).map((e) {
-            return Row(
-              children: [
-                Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: _generatePastelColor(e.key.hashCode),
-                  ),
-                ),
-                const SizedBox(
-                  width: 4,
-                ),
-                Text(
-                  e.key,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            );
-          }).toList(),
+          children: data.total == 0
+              ? [SizedBox(width: 270)]
+              : myData.take(min(5, myData.length)).map((e) {
+                  return Row(
+                    children: [
+                      Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: _generatePastelColor(e.key.hashCode),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          e.key,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }).toList(),
         )
       ],
     );

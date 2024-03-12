@@ -11,10 +11,10 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/chart/statistics_chart.dart';
-
-import '../widgets/form/expandable_floating_button.dart';
-import '../widgets/form/location_form.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/pie-chart/visitors_pie_chart.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/expandable_floating_button.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/location_form.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/leaders-table/leaders-table.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({super.key, required this.controller});
@@ -33,8 +33,43 @@ class _MainPageState extends State<MainPage>
 
   var labels = ["Регион", "Район", "Школа"];
 
+  late (Map<String, int>, {int total}) regionData;
+  late (Map<String, int>, {int total}) districtData;
+  late (Map<String, int>, {int total}) schoolData;
+
+  void getData() async {
+    widget.controller.getRegionStatistics().then((value) {
+      setState(() {
+        regionData = (
+          value.subjectToVisitorNumber
+              .map((key, value) => MapEntry(key.name, value)),
+          total: value.total
+        );
+      });
+    });
+    widget.controller.getDistrictStatistics().then((value) {
+      setState(() {
+        districtData = (
+          value.subjectToVisitorNumber
+              .map((key, value) => MapEntry(key.name, value)),
+          total: value.total
+        );
+      });
+    });
+    widget.controller.getSchoolStatistics().then((value) {
+      setState(() {
+        schoolData = (
+          value.subjectToVisitorNumber
+              .map((key, value) => MapEntry(key.name, value)),
+          total: value.total
+        );
+      });
+    });
+  }
+
   @override
   void initState() {
+    getData();
     _tabController = TabController(vsync: this, length: 3);
 
     widget.controller.addErrorListener((msg) {
@@ -101,16 +136,24 @@ class _MainPageState extends State<MainPage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsChart(
-                        getIdMap: () async {
-                          var result =
-                              await widget.controller.getRegionStatistics();
-                          return (
-                            result.total,
-                            result.subjectToVisitorNumber
-                                .map((key, value) => MapEntry(key.name, value))
-                          );
-                        },
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height: 300,
+                              child: VisitorsPieChart(data: regionData)),
+                          Container(
+                            color: Colors.white,
+                            child: LeadersTable(
+                              border: TableBorder.all(
+                                  width: 1,
+                              color: Colors.grey),
+                              label: labels[0],
+                              data: regionData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -149,16 +192,24 @@ class _MainPageState extends State<MainPage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsChart(
-                        getIdMap: () async {
-                          var result =
-                              await widget.controller.getDistrictStatistics();
-                          return (
-                            result.total,
-                            result.subjectToVisitorNumber
-                                .map((key, value) => MapEntry(key.name, value))
-                          );
-                        },
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height: 300,
+                              child: VisitorsPieChart(data: districtData)),
+                          Container(
+                            color: Colors.white,
+                            child: LeadersTable(
+                              border: TableBorder.all(
+                                  width: 1,
+                                  color: Colors.grey),
+                              label: labels[1],
+                              data: districtData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -197,16 +248,24 @@ class _MainPageState extends State<MainPage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StatisticsChart(
-                        getIdMap: () async {
-                          var result =
-                              await widget.controller.getSchoolStatistics();
-                          return (
-                            result.total,
-                            result.subjectToVisitorNumber
-                                .map((key, value) => MapEntry(key.name, value))
-                          );
-                        },
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height: 300,
+                              child: VisitorsPieChart(data: schoolData)),
+                          Container(
+                            color: Colors.white,
+                            child: LeadersTable(
+                              border: TableBorder.all(
+                                  width: 1,
+                                  color: Colors.grey),
+                              label: labels[2],
+                              data: schoolData.$1.entries.map((e) => (name : e.key, count : e.value)).toList(),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -263,6 +322,7 @@ class _MainPageState extends State<MainPage>
                         school: model);
                 }
                 await widget.controller.addVisitor(visitor);
+                getData();
                 setState(() {});
               })),
     );
