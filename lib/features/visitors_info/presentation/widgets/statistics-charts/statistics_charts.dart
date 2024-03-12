@@ -24,12 +24,16 @@ class StatisticsCharts extends StatelessWidget {
             SizedBox(height: 300, child: VisitorsPieChart(data: data)),
             Container(
               color: Colors.white,
-              child: LeadersTable(
-                border: TableBorder.all(width: 1, color: Colors.grey),
-                label: label,
-                data: data.$1.entries
-                    .map((e) => (name: e.key, count: e.value))
-                    .toList(),
+              child: SizedBox(
+                width: 500,
+                height: 300,
+                child: LeadersTable(
+                  border: TableBorder.all(width: 1, color: Colors.grey),
+                  label: label,
+                  data: data.$1.entries
+                      .map((e) => (name: e.key, count: e.value))
+                      .toList(),
+                ),
               ),
             ),
           ],
