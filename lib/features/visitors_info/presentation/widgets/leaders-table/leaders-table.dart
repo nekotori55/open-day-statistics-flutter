@@ -7,10 +7,12 @@ class LeadersTable extends StatelessWidget {
     super.key,
     required this.data,
     this.border,
+    required this.label
   });
 
   final List<({String name, int count})> data;
   final TableBorder? border;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +20,11 @@ class LeadersTable extends StatelessWidget {
     return DataTable(
       clipBehavior: Clip.antiAlias,
       border: border,
-      columns: const [
+      columns: [
         DataColumn(
-          label: Text("Название"),
+          label: Text(label),
         ),
-        DataColumn(
+        const DataColumn(
           label: Text("Количество"),
           numeric: true,
         ),
