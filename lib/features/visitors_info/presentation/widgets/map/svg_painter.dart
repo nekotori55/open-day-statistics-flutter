@@ -21,7 +21,7 @@ class PathPainter extends CustomPainter {
       Path path = subjectPath.path;
 
       if (subjectPath.isDisplay == false) {
-        paint.color = Colors.grey;
+        paint.color = Color(0xFFD0D0D0  );
         paint.style = PaintingStyle.stroke;
 
         canvas.drawPath(path, paint);
@@ -31,7 +31,7 @@ class PathPainter extends CustomPainter {
 
         canvas.drawPath(path, paint);
 
-        paint.color = Colors.grey;
+        paint.color = Color(0xFF444444);
         paint.style = PaintingStyle.stroke;
 
         canvas.drawPath(path, paint);
@@ -53,7 +53,7 @@ class PointPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     final paint = Paint();
-    paint.color = Color(0xFF777777);
+    paint.color = Color(0xFF444444);
 
     for (MapPoint capitalPoint in _capitalPoints) {
       canvas.drawCircle(capitalPoint.offset, capitalPoint.radius, paint);
@@ -75,7 +75,7 @@ class NamePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     var textStyle = TextStyle(
-      color: Color(0xFF777777),
+      color: Color(0xFF444444),
       fontSize: _fontSize,
       fontWeight: FontWeight.w600,
     );
