@@ -240,9 +240,17 @@ class _MainPageState extends State<MainPage>
 
                 switch (model) {
                   case RegionViewModel():
+                    if (model.id == defaultRegion.id) {
+                      _tabController.animateTo(1);
+                      return;
+                    }
                     visitor = VisitorViewModel(
                         district: null, region: model, school: null);
                   case DistrictViewModel():
+                    if (model.id == defaultDistrict.id) {
+                      _tabController.animateTo(2);
+                      return;
+                    }
                     visitor = VisitorViewModel(
                         district: model, region: defaultRegion, school: null);
                   case SchoolViewModel():
