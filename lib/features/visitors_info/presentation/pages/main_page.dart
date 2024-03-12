@@ -41,7 +41,12 @@ class _MainPageState extends State<MainPage>
       setState(() {
         regionData = (
           value.subjectToVisitorNumber
-              .map((key, value) => MapEntry(key.name, value)),
+              .map((key, value) {
+                if (key.id == "RU-KLU") {
+                  return MapEntry(key.name, 0);
+                }
+                return MapEntry(key.name, value);
+              }),
           total: value.total
         );
       });
@@ -50,7 +55,12 @@ class _MainPageState extends State<MainPage>
       setState(() {
         districtData = (
           value.subjectToVisitorNumber
-              .map((key, value) => MapEntry(key.name, value)),
+              .map((key, value) {
+            if (key.id == "kl_kal") {
+              return MapEntry(key.name, 0);
+            }
+            return MapEntry(key.name, value);
+          }),
           total: value.total
         );
       });
@@ -59,7 +69,12 @@ class _MainPageState extends State<MainPage>
       setState(() {
         schoolData = (
           value.subjectToVisitorNumber
-              .map((key, value) => MapEntry(key.name, value)),
+              .map((key, value) {
+            if (key.id == "0") {
+              return MapEntry(key.name, 0);
+            }
+            return MapEntry(key.name, value);
+          }),
           total: value.total
         );
       });
