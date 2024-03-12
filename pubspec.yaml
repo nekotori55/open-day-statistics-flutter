@@ -10,6 +10,7 @@ dependencies:
   drift: ^2.16.0
   dropdown_search: ^5.0.6
   equatable: ^2.0.5
+  fl_chart: ^0.66.2
   flutter:
     sdk: flutter
   meta: ^1.11.0
