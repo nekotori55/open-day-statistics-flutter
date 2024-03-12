@@ -3,34 +3,46 @@ import 'package:flutter/material.dart';
 import '../../view/base_view_model.dart';
 import 'dropdown_field.dart';
 
+class FormController {
+  void Function() clearForm = () {};
+}
+
 class MyLittleFormy extends StatefulWidget {
   const MyLittleFormy({
     super.key,
     required this.getItems,
     required this.label,
     required this.onSend,
+    required this.formController,
   });
 
   final Future<List<ViewModel>> Function(String?) getItems;
   final String label;
   final Function(ViewModel?) onSend;
+  final FormController formController;
 
   @override
-  State<MyLittleFormy> createState() => _MyLittleFormyState();
+  State<MyLittleFormy> createState() => _MyLittleFormyState(formController);
 }
 
 class _MyLittleFormyState extends State<MyLittleFormy> {
+  _MyLittleFormyState(FormController controller) {
+    controller.clearForm = clearForm;
+  }
 
-  static final GlobalKey<DropdownSearchState> dropdownFieldGlobalKey = GlobalKey();
+  static final GlobalKey<DropdownSearchState> dropdownFieldGlobalKey =
+      GlobalKey();
 
   ViewModel? _selected;
 
   bool singleMode = true;
 
+  void clearForm() {
+    dropdownFieldGlobalKey.currentState?.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
-    dropdownFieldGlobalKey.currentState?.clear();
     return Row(
       children: [
         const SizedBox(
@@ -50,21 +62,21 @@ class _MyLittleFormyState extends State<MyLittleFormy> {
             widget.onSend(_selected);
 
             if (singleMode) {
-              dropdownFieldGlobalKey.currentState?.clear();
+              clearForm();
             }
           },
-
           onLongPress: () {
             setState(() {
               singleMode = !singleMode;
             });
           },
-
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(20),
           ),
-          child: singleMode ? const Icon(Icons.person_add) : const Icon(Icons.people),
+          child: singleMode
+              ? const Icon(Icons.person_add)
+              : const Icon(Icons.people),
         ),
       ],
     );

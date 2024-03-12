@@ -17,9 +17,10 @@ import '../widgets/form/expandable_floating_button.dart';
 import '../widgets/form/location_form.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.controller});
+  MainPage({super.key, required this.controller});
 
   final VisitorsViewController controller;
+  final FormController formController = FormController();
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -45,6 +46,7 @@ class _MainPageState extends State<MainPage>
     });
 
     onTabChangeListener() {
+      widget.formController.clearForm();
       setState(() {
         currentTab = _tabController.index;
       });
@@ -229,6 +231,7 @@ class _MainPageState extends State<MainPage>
                     throw ArgumentError();
                 }
               },
+              formController: widget.formController,
               onSend: (model) async {
                 late VisitorViewModel visitor;
 
@@ -260,6 +263,7 @@ class _MainPageState extends State<MainPage>
                         school: model);
                 }
                 await widget.controller.addVisitor(visitor);
+                setState(() {});
               })),
     );
   }
