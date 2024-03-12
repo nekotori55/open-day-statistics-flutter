@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
-
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
@@ -37,7 +38,9 @@ class _MainPageState extends State<MainPage>
 
     widget.controller.addErrorListener((msg) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg!), backgroundColor: Theme.of(context).colorScheme.error),
+        SnackBar(
+            content: Text(msg!),
+            backgroundColor: Theme.of(context).colorScheme.error),
       );
     });
 
@@ -60,117 +63,196 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        appBar: Header(tabController: _tabController),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      appBar: Header(tabController: _tabController),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          ClipRect(
+            child: Stack(
               children: [
-                StatisticsMap(
-                  mapSvg: RussiaSvg,
-                  centerId: "RU-KLU",
-                  fromPath: true,
-                  getIdMap: () async {
-                    var result = await widget.controller.getRegionStatistics();
-                    return result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.id, value));
-                  },
+                InteractiveViewer(
+                  scaleFactor: 1000,
+                  maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: RussiaSvg,
+                          centerId: "RU-KLU",
+                          fromPath: true,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getRegionStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                StatisticsChart(
-                  getIdMap: () async {
-                    var result = await widget.controller.getRegionStatistics();
-                    return (result.total, result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.name, value)));
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      StatisticsChart(
+                        getIdMap: () async {
+                          var result =
+                              await widget.controller.getRegionStatistics();
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          ),
+          ClipRect(
+            child: Stack(
               children: [
-                StatisticsMap(
-                  mapSvg: KlSubSvg,
-                  centerId: "kl_kal",
-                  fromPath: true,
-                  getIdMap: () async {
-                    var result = await widget.controller.getDistrictStatistics();
-                    return result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.id, value));
-                  },
+                InteractiveViewer(
+                  scaleFactor: 1000,
+                  maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: KlSubSvg,
+                          centerId: "kl_kal",
+                          fromPath: true,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getDistrictStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                StatisticsChart(
-                  getIdMap: () async {
-                    var result = await widget.controller.getDistrictStatistics();
-                    return (result.total, result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.name, value)));
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      StatisticsChart(
+                        getIdMap: () async {
+                          var result =
+                              await widget.controller.getDistrictStatistics();
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          ),
+          ClipRect(
+            child: Stack(
               children: [
-                StatisticsMap(
-                  mapSvg: KlCitySvg,
-                  centerId: "0",
-                  fromPath: false,
-                  getIdMap: () async {
-                    var result = await widget.controller.getSchoolStatistics();
-                    return result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.id, value));
-                  },
+                InteractiveViewer(
+                  scaleFactor: 1000,
+                  maxScale: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        StatisticsMap(
+                          mapSvg: KlCitySvg,
+                          centerId: "0",
+                          fromPath: false,
+                          getIdMap: () async {
+                            var result =
+                                await widget.controller.getSchoolStatistics();
+                            return result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.id, value));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                StatisticsChart(
-                  getIdMap: () async {
-                    var result = await widget.controller.getSchoolStatistics();
-                    return (result.total, result.subjectToVisitorNumber
-                        .map((key, value) => MapEntry(key.name, value)));
-                  },
-                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      StatisticsChart(
+                        getIdMap: () async {
+                          var result =
+                              await widget.controller.getSchoolStatistics();
+                          return (
+                            result.total,
+                            result.subjectToVisitorNumber
+                                .map((key, value) => MapEntry(key.name, value))
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
       floatingActionButton: ExpandableFloatingButton(
           child: MyLittleFormy(
-            label: labels[currentTab],
-            getItems: (_) {
-              switch (currentTab) {
-                case 0:
-                  return widget.controller.getAllRegions();
-                case 1:
-                  return widget.controller.getAllDistricts();
-                case 2:
-                  return widget.controller.getAllSchools();
-                default:
-                  throw ArgumentError();
-              }
-            },
-            onSend: (model) async {
-              late VisitorViewModel visitor;
+              label: labels[currentTab],
+              getItems: (_) {
+                switch (currentTab) {
+                  case 0:
+                    return widget.controller.getAllRegions();
+                  case 1:
+                    return widget.controller.getAllDistricts();
+                  case 2:
+                    return widget.controller.getAllSchools();
+                  default:
+                    throw ArgumentError();
+                }
+              },
+              onSend: (model) async {
+                late VisitorViewModel visitor;
 
-              final defaultRegion = RegionViewModel(id: "RU-KLU", name: "");
-              final defaultDistrict = DistrictViewModel(id: "kl_kal", name: "");
+                final defaultRegion = RegionViewModel(id: "RU-KLU", name: "");
+                final defaultDistrict =
+                    DistrictViewModel(id: "kl_kal", name: "");
 
-              if (model == null) return;
+                if (model == null) return;
 
-              switch (model) {
-                case RegionViewModel():
-                  visitor = VisitorViewModel(
-                      district: null, region: model, school: null);
-                case DistrictViewModel():
-                  visitor = VisitorViewModel(
-                      district: model, region: defaultRegion, school: null);
-                case SchoolViewModel():
-                  visitor = VisitorViewModel(district: defaultDistrict,
-                      region: defaultRegion,
-                      school: model);
-              }
-              await widget.controller.addVisitor(visitor);
-            }
-          )),
+                switch (model) {
+                  case RegionViewModel():
+                    visitor = VisitorViewModel(
+                        district: null, region: model, school: null);
+                  case DistrictViewModel():
+                    visitor = VisitorViewModel(
+                        district: model, region: defaultRegion, school: null);
+                  case SchoolViewModel():
+                    visitor = VisitorViewModel(
+                        district: defaultDistrict,
+                        region: defaultRegion,
+                        school: model);
+                }
+                await widget.controller.addVisitor(visitor);
+              })),
     );
   }
 }

@@ -5,11 +5,13 @@ class MapPath {
     required this.path,
     required this.fill,
     required this.id,
+    required this.isDisplay,
   });
 
   final Path path;
   final Color fill;
   final String id;
+  final bool isDisplay;
 }
 
 class MapPoint {

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import "models.dart";
@@ -14,23 +15,27 @@ class PathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     final paint = Paint();
+    paint.strokeWidth = _strokeWidth;
 
     for (MapPath subjectPath in _subjectPaths) {
       Path path = subjectPath.path;
 
-      paint.color = subjectPath.fill;
-      paint.style = PaintingStyle.fill;
+      if (subjectPath.isDisplay == false) {
+        paint.color = Colors.grey;
+        paint.style = PaintingStyle.stroke;
 
-      canvas.drawPath(path, paint);
+        canvas.drawPath(path, paint);
+      } else {
+        paint.color = subjectPath.fill;
+        paint.style = PaintingStyle.fill;
 
-      paint.color = Colors.black;
-      paint.style = PaintingStyle.stroke;
-      paint.strokeWidth = _strokeWidth;
+        canvas.drawPath(path, paint);
 
-      canvas.drawPath(path, paint);
+        paint.color = Colors.grey;
+        paint.style = PaintingStyle.stroke;
 
-      paint.color = Colors.blue;
-      paint.style = PaintingStyle.fill;
+        canvas.drawPath(path, paint);
+      }
     }
   }
 
@@ -48,7 +53,7 @@ class PointPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     final paint = Paint();
-    paint.color = Colors.black;
+    paint.color = Color(0xFF777777);
 
     for (MapPoint capitalPoint in _capitalPoints) {
       canvas.drawCircle(capitalPoint.offset, capitalPoint.radius, paint);
@@ -70,7 +75,7 @@ class NamePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.scale(_scale, _scale);
     var textStyle = TextStyle(
-      color: Colors.black,
+      color: Color(0xFF777777),
       fontSize: _fontSize,
       fontWeight: FontWeight.w600,
     );
@@ -210,4 +215,77 @@ class AmountPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(AmountPainter oldDelegate) => true;
+}
+
+class SchoolPainter extends CustomPainter {
+  const SchoolPainter(
+    this._capitalPoints,
+    this._scale,
+    this._visitorsNums,
+  );
+
+  final List<MapPoint> _capitalPoints;
+  final double _scale;
+  final Map<String, int> _visitorsNums;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double fontSize = 8;
+    canvas.scale(_scale, _scale);
+    final paint = Paint();
+    paint.color = Colors.blueGrey;
+
+    for (var capitalPoint in _capitalPoints) {
+      var visitorsNum = _visitorsNums[capitalPoint.id];
+      if (visitorsNum == null) {
+        continue;
+      }
+
+      canvas.drawCircle(capitalPoint.offset, fontSize + 2, paint);
+
+      var textSpan = TextSpan(
+        children: [
+          TextSpan(
+            text: '№',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSize / 1.5,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+          TextSpan(
+            text: capitalPoint.id,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+          TextSpan(
+            text: '№',
+            style: TextStyle(
+              color: Colors.transparent,
+              fontSize: fontSize / 4,
+              fontWeight: FontWeight.w600,
+              fontFamily: "Arial",
+            ),
+          ),
+        ],
+      );
+      var textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(
+          canvas,
+          Offset(capitalPoint.offset.dx - textPainter.width * 0.5,
+              capitalPoint.offset.dy - textPainter.height * 0.5));
+    }
+  }
+
+  @override
+  bool shouldRepaint(SchoolPainter oldDelegate) => false;
 }
