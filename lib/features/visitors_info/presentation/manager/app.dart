@@ -13,8 +13,16 @@ class App extends StatelessWidget {
     var theme = ThemeData(
       colorScheme: colorScheme,
       dataTableTheme: DataTableThemeData(
-        headingTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-        headingRowColor: MaterialStateColor.resolveWith((states) => colorScheme.primaryContainer),
+        headingTextStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
+        headingRowColor: MaterialStateColor.resolveWith(
+            (states) => colorScheme.primaryContainer),
+        dataTextStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
       ),
       fontFamily: 'Gilroy',
       useMaterial3: true,
