@@ -80,31 +80,38 @@ class VisitorsPieChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: data.total == 0
               ? [SizedBox(width: 270)]
-              : myData.take(min(5, myData.length)).map((e) {
-                  return Row(
+              : myData.take(min(10, myData.length)).map((e) {
+                  return Column(
                     children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: _generatePastelColor(e.key.hashCode),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
                       SizedBox(
-                        width: 250,
-                        child: Text(
-                          e.key,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        height: 4,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: _generatePastelColor(e.key.hashCode),
+                            ),
                           ),
-                        ),
-                      )
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                              e.key,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   );
                 }).toList(),
