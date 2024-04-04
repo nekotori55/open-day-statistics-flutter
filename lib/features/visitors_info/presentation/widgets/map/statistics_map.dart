@@ -11,13 +11,13 @@ class StatisticsMap extends StatefulWidget {
       required this.mapSvg,
       required this.centerId,
       required this.fromPath,
-      required this.getIdMap});
+      required this.getIdToMap});
 
   final String mapSvg;
   final String centerId;
   final bool fromPath;
 
-  final Future<Map<String, int>> Function() getIdMap;
+  final Future<Map<String, int>> Function() getIdToMap;
 
   @override
   State<StatisticsMap> createState() => _StatisticsMapState();
@@ -31,7 +31,7 @@ class _StatisticsMapState extends State<StatisticsMap>
   Map<String, int> idmap = {};
 
   updateMap() async {
-    idmap = await widget.getIdMap();
+    idmap = await widget.getIdToMap();
   }
 
   @override

@@ -7,8 +7,8 @@ class FormController {
   void Function() clearForm = () {};
 }
 
-class MyLittleFormy extends StatefulWidget {
-  const MyLittleFormy({
+class FloatingActionButtonForm extends StatefulWidget {
+  const FloatingActionButtonForm({
     super.key,
     required this.getItems,
     required this.label,
@@ -22,11 +22,11 @@ class MyLittleFormy extends StatefulWidget {
   final FormController formController;
 
   @override
-  State<MyLittleFormy> createState() => _MyLittleFormyState(formController);
+  State<FloatingActionButtonForm> createState() => _FloatingActionButtonFormState(formController);
 }
 
-class _MyLittleFormyState extends State<MyLittleFormy> {
-  _MyLittleFormyState(FormController controller) {
+class _FloatingActionButtonFormState extends State<FloatingActionButtonForm> {
+  _FloatingActionButtonFormState(FormController controller) {
     controller.clearForm = clearForm;
   }
 

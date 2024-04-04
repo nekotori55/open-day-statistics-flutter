@@ -9,12 +9,10 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/expandable_floating_button.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/location_form.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/leaders-table/leaders-table.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/pie-chart/visitors_pie_chart.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({super.key, required this.controller});
@@ -124,7 +122,7 @@ class _MainPageState extends State<MainPage>
                           mapSvg: RussiaSvg,
                           centerId: "RU-KLU",
                           fromPath: true,
-                          getIdMap: () async {
+                          getIdToMap: () async {
                             var result =
                                 await widget.controller.getRegionStatistics();
                             return result.subjectToVisitorNumber
@@ -157,7 +155,7 @@ class _MainPageState extends State<MainPage>
                           mapSvg: KlSubSvg,
                           centerId: "kl_kal",
                           fromPath: true,
-                          getIdMap: () async {
+                          getIdToMap: () async {
                             var result =
                                 await widget.controller.getDistrictStatistics();
                             return result.subjectToVisitorNumber
@@ -190,7 +188,7 @@ class _MainPageState extends State<MainPage>
                           mapSvg: KlCitySvg,
                           centerId: "0",
                           fromPath: false,
-                          getIdMap: () async {
+                          getIdToMap: () async {
                             var result =
                                 await widget.controller.getSchoolStatistics();
                             return result.subjectToVisitorNumber
@@ -211,7 +209,7 @@ class _MainPageState extends State<MainPage>
         ],
       ),
       floatingActionButton: ExpandableFloatingButton(
-          child: MyLittleFormy(
+          child: FloatingActionButtonForm(
               label: labels[currentTab],
               getItems: (_) {
                 switch (currentTab) {

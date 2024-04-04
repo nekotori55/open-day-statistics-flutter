@@ -27,9 +27,7 @@ class App extends StatelessWidget {
       fontFamily: 'Gilroy',
       useMaterial3: true,
     );
-
-    // theme.
-
+    
     return MaterialApp(
       title: 'Open day statistics',
       theme: theme,
