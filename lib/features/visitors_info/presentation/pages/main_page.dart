@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/statistics_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/statistics-charts/statistics_charts.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/region_view_model.dart';
@@ -32,52 +33,41 @@ class _MainPageState extends State<MainPage>
 
   var labels = ["Регион", "Район", "Школа"];
 
-  late (Map<String, int>, {int total}) regionData;
-  late (Map<String, int>, {int total}) districtData;
-  late (Map<String, int>, {int total}) schoolData;
+  (Map<String, int>, {int total}) regionData = ({}, total: 0);
+  (Map<String, int>, {int total}) districtData = ({}, total: 0);
+  (Map<String, int>, {int total}) schoolData = ({}, total: 0);
 
   void getData() async {
-    widget.controller.getRegionStatistics().then((value) {
-      setState(() {
-        regionData = (
-          value.subjectToVisitorNumber
-              .map((key, value) {
-                if (key.id == "RU-KLU") {
-                  return MapEntry(key.name, 0);
-                }
-                return MapEntry(key.name, value);
-              }),
-          total: value.total
-        );
-      });
-    });
-    widget.controller.getDistrictStatistics().then((value) {
-      setState(() {
-        districtData = (
-          value.subjectToVisitorNumber
-              .map((key, value) {
-            if (key.id == "kl_kal") {
-              return MapEntry(key.name, 0);
-            }
-            return MapEntry(key.name, value);
-          }),
-          total: value.total
-        );
-      });
-    });
-    widget.controller.getSchoolStatistics().then((value) {
-      setState(() {
-        schoolData = (
-          value.subjectToVisitorNumber
-              .map((key, value) {
-            if (key.id == "0") {
-              return MapEntry(key.name, 0);
-            }
-            return MapEntry(key.name, value);
-          }),
-          total: value.total
-        );
-      });
+    var results = await Future.wait([
+      widget.controller.getRegionStatistics(),
+      widget.controller.getDistrictStatistics(),
+      widget.controller.getSchoolStatistics()
+    ]);
+
+    setState(() {
+      var regionValues = results[0] as StatisticsViewModel<RegionViewModel>;
+      regionData = (
+        regionValues.subjectToVisitorNumber.map((key, value) {
+          return MapEntry(key.name, value);
+        }),
+        total: regionValues.total
+      );
+
+      var districtValues = results[1] as StatisticsViewModel<DistrictViewModel>;
+      districtData = (
+        districtValues.subjectToVisitorNumber.map((key, value) {
+          return MapEntry(key.name, value);
+        }),
+        total: districtValues.total
+      );
+
+      var schoolValues = results[2] as StatisticsViewModel<SchoolViewModel>;
+      schoolData = (
+        schoolValues.subjectToVisitorNumber.map((key, value) {
+          return MapEntry(key.name, value);
+        }),
+        total: schoolValues.total
+      );
     });
   }
 
