@@ -27,6 +27,7 @@ class VisitorsPieChart extends StatelessWidget {
       (a, b) => b.value.compareTo(a.value),
     );
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         AspectRatio(
           aspectRatio: 1,

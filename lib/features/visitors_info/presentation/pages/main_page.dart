@@ -133,10 +133,7 @@ class _MainPageState extends State<MainPage>
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 50),
-                  child: StatisticsCharts(data: regionData, label: labels[0],)
-                ),
+                StatisticsCharts(data: regionData, label: labels[0],),
               ],
             ),
           ),
