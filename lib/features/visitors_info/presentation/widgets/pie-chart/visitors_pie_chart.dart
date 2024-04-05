@@ -77,8 +77,7 @@ class VisitorsPieChart extends StatelessWidget {
           width: 4,
         ),
         Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: data.total == 0
               ? [SizedBox(width: 270)]
               : myData.take(min(10, myData.length)).map((e) {

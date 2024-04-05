@@ -15,9 +15,9 @@ class StatisticsCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.topRight,
       child: Container(
-        margin: const EdgeInsets.only(right: 16),
+        margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -31,7 +31,7 @@ class StatisticsCharts extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
