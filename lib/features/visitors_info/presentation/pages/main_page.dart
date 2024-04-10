@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gif/gif.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/statistics_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/statistics-charts/statistics_charts.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
@@ -24,9 +25,9 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late TabController _tabController;
+
   var currentTab = 0;
 
   var labels = ["Регион", "Район", "Школа"];
@@ -97,6 +98,62 @@ class _MainPageState extends State<MainPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showAnniversary() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                child: FittedBox(
+                  child: Gif(
+                    fps: 30,
+                    autostart: Autostart.loop,
+                    image: AssetImage(
+                      "assets/confetti.gif",
+                    ),
+                  ),
+                  fit: BoxFit.fill,
+                ),
+              );
+            }),
+            AlertDialog(
+              title: const Text(
+                'Юбилей!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                ),
+              ),
+              content: Text(
+                'Вы ${regionData.total}-й посетитель!',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    '🎁',
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -254,6 +311,7 @@ class _MainPageState extends State<MainPage>
                 await widget.controller.addVisitor(visitor);
                 getData();
                 setState(() {});
+                _showAnniversary();
               })),
     );
   }
