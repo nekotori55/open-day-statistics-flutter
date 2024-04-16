@@ -7,7 +7,7 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/school_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitor_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/visitors_view_controller.dart';
-import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/Header/header.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/header/header.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/expandable_floating_button.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/form/location_form.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/statistics_map.dart';
@@ -190,7 +190,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                StatisticsCharts(data: regionData, label: labels[0],),
+                StatisticsCharts(
+                  data: regionData,
+                  label: labels[0],
+                ),
               ],
             ),
           ),
@@ -254,9 +257,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 50),
-                  child: StatisticsCharts(data: schoolData, label: labels[2],)
-                )
+                    padding: const EdgeInsets.only(right: 50),
+                    child: StatisticsCharts(
+                      data: schoolData,
+                      label: labels[2],
+                    ))
               ],
             ),
           ),
