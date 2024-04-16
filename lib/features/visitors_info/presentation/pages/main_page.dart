@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gif/gif.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/statistics_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/statistics-charts/statistics_charts.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/district_view_model.dart';
@@ -14,6 +13,7 @@ import 'package:open_day_statistics_flutter/features/visitors_info/presentation/
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_city_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/kl_sub_svg.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/map/svg/russia_svg.dart';
+import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/anniversary-dialogue/anniversary_dialogue.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({super.key, required this.controller});
@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   (Map<String, int>, {int total}) districtData = ({}, total: 0);
   (Map<String, int>, {int total}) schoolData = ({}, total: 0);
 
-  void getData() async {
+  Future<void> getData() async {
     var results = await Future.wait([
       widget.controller.getRegionStatistics(),
       widget.controller.getDistrictStatistics(),
@@ -68,6 +68,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         total: schoolValues.total
       );
     });
+
   }
 
   @override
@@ -101,58 +102,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Future<void> _showAnniversary() async {
-    return showDialog<void>(
+    var anniversaryDialogue = GestureDetector(
+      child: AnniversaryDialogue(visitorNumber: regionData.total),
+      onLongPress: () => Navigator.of(context).pop(),
+    );
+    return showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            LayoutBuilder(builder: (context, constraints) {
-              return SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: FittedBox(
-                  child: Gif(
-                    fps: 30,
-                    autostart: Autostart.loop,
-                    image: AssetImage(
-                      "assets/confetti.gif",
-                    ),
-                  ),
-                  fit: BoxFit.fill,
-                ),
-              );
-            }),
-            AlertDialog(
-              title: const Text(
-                'Юбилей!',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                ),
-              ),
-              content: Text(
-                'Вы ${regionData.total}-й посетитель!',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text(
-                    '🎁',
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ],
-        );
-      },
+      builder: (BuildContext context) => anniversaryDialogue,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withAlpha(200),
     );
   }
 
@@ -314,9 +272,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         school: model);
                 }
                 await widget.controller.addVisitor(visitor);
-                getData();
-                setState(() {});
-                _showAnniversary();
+                getData().whenComplete(() {
+                  if (regionData.total.remainder(10) == 0) {
+                    _showAnniversary();
+                  }
+                });
               })),
     );
   }
