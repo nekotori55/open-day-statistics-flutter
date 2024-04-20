@@ -13,24 +13,29 @@ class AnniversaryDialogue extends StatefulWidget {
 }
 
 class _AnniversaryDialogueState extends State<AnniversaryDialogue> {
-  late ConfettiController _confettiController;
+  late ConfettiController _foregroundConfettiController;
+  late ConfettiController _backgroundConfettiController;
 
   @override
   void initState() {
     super.initState();
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 10));
+    _foregroundConfettiController =
+        ConfettiController(duration: const Duration(seconds: 4));
+    _backgroundConfettiController =
+        ConfettiController(duration: const Duration(seconds: 4));
   }
 
   @override
   void dispose() {
-    _confettiController.dispose();
+    _foregroundConfettiController.dispose();
+    _backgroundConfettiController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    _confettiController.play();
+    _foregroundConfettiController.play();
+    _backgroundConfettiController.play();
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
       child: Dialog.fullscreen(
@@ -42,15 +47,15 @@ class _AnniversaryDialogueState extends State<AnniversaryDialogue> {
             Align(
               alignment: Alignment.topCenter.add(const Alignment(0, -1)),
               child: ConfettiWidget(
-                confettiController: _confettiController,
+                confettiController: _backgroundConfettiController,
                 blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: true,
                 minBlastForce: 250,
                 maxBlastForce: 300,
-                emissionFrequency: 0.05,
+                emissionFrequency: 0.1,
                 minimumSize: const Size(10, 10),
                 maximumSize: const Size(50, 50),
-                numberOfParticles: 5,
+                numberOfParticles: 2,
                 gravity: 1,
               ),
             ),
@@ -71,7 +76,7 @@ class _AnniversaryDialogueState extends State<AnniversaryDialogue> {
                       ),
                     ),
                     RichText(
-                      text: TextSpan(text: 'Вы наш ', children: <TextSpan>[
+                      text: TextSpan(text: 'Вы ', children: <TextSpan>[
                         TextSpan(
                           text: widget.visitorNumber.toString(),
                           style: const TextStyle(
@@ -90,7 +95,7 @@ class _AnniversaryDialogueState extends State<AnniversaryDialogue> {
             Align(
               alignment: Alignment.topCenter.add(const Alignment(0, -1)),
               child: ConfettiWidget(
-                confettiController: _confettiController,
+                confettiController: _foregroundConfettiController,
                 blastDirectionality: BlastDirectionality.explosive,
                 shouldLoop: true,
                 minBlastForce: 250,
@@ -98,7 +103,7 @@ class _AnniversaryDialogueState extends State<AnniversaryDialogue> {
                 emissionFrequency: 0.3,
                 minimumSize: const Size(10, 10),
                 maximumSize: const Size(50, 50),
-                numberOfParticles: 5,
+                numberOfParticles: 1,
                 gravity: 0.6,
               ),
             ),
