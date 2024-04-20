@@ -23,6 +23,7 @@ dependencies:
   pie_chart: ^5.4.0
   sqlite3: ^2.4.0
   sqlite3_flutter_libs: ^0.5.20
+  window_manager: ^0.3.8
   xml: ^6.5.0
 
 
