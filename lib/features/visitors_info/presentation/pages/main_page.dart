@@ -281,7 +281,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 }
                 await widget.controller.addVisitor(visitor);
                 getData().whenComplete(() {
-                  if (regionData.total.remainder(10) == 0) {
+                  if (regionData.total.remainder(50) == 0) {
                     _showAnniversary();
                   }
                 });
