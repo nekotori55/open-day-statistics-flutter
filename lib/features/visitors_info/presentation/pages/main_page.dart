@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/view/statistics_view_model.dart';
 import 'package:open_day_statistics_flutter/features/visitors_info/presentation/widgets/statistics-charts/statistics_charts.dart';
@@ -29,7 +28,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   late TabController _tabController;
 
-  final player = AudioPlayer();
+  // final player = AudioPlayer();
 
   var currentTab = 0;
 
@@ -79,7 +78,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     getData();
     _tabController = TabController(vsync: this, length: 3);
 
-    player.setSource(AssetSource("fanfare.mp3"));
+    // player.setSource(AssetSource("fanfare.mp3"));
 
     widget.controller.addErrorListener((msg) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -112,7 +111,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       onLongPress: () => Navigator.of(context).pop(),
     );
 
-    player.resume();
+    // player.resume();
 
     return showDialog(
       context: context,

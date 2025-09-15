@@ -1,41 +1,38 @@
 name: open_day_statistics_flutter
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: ">=3.2.6 <4.0.0"
 
 dependencies:
-  audioplayers: ^6.0.0
-  confetti: ^0.7.0
+  # audioplayers: ^6.0.0
+  confetti: ^0.8.0
   drift: ^2.16.0
   dropdown_search: ^5.0.6
   equatable: ^2.0.5
-  fl_chart: ^0.66.2
+  fl_chart: ^1.1.0
   flutter:
     sdk: flutter
   gif: ^2.3.0
   meta: ^1.11.0
-  path: 1.9.0
+  path: 1.9.1
   path_drawing: ^1.0.1
   path_provider: ^2.1.2
   pie_chart: ^5.4.0
   sqlite3: ^2.4.0
   sqlite3_flutter_libs: ^0.5.20
-  window_manager: ^0.3.8
+  window_manager: ^0.5.1
   xml: ^6.5.0
-
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
   test: ^1.24.9
   drift_dev: ^2.16.0
   build_runner: ^2.4.8
-
 
 flutter:
   uses-material-design: true
@@ -49,4 +46,3 @@ flutter:
           weight: 800
         - asset: assets/Gilroy-SemiBold.ttf
           weight: 700
-

@@ -3,8 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_windows
-  screen_retriever
+  screen_retriever_windows
   sqlite3_flutter_libs
   window_manager
 )
