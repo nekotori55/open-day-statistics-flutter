@@ -10,8 +10,10 @@ import 'features/visitors_info/presentation/manager/app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final ds = VisitorStatisticsLocalDatasourceImpl();
-  final repository = VisitorStatisticsRepositoryImpl(useCache: true, datasource: ds);
-  final VisitorsViewController controller = VisitorsViewControllerImpl(repository: repository);
+  final repository =
+      VisitorStatisticsRepositoryImpl(useCache: true, datasource: ds);
+  final VisitorsViewController controller =
+      VisitorsViewControllerImpl(repository: repository);
 
   await windowManager.ensureInitialized();
 
@@ -25,7 +27,7 @@ void main() async {
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();
-    await windowManager.setFullScreen(true);
+    // await windowManager.setFullScreen(true);
   });
 
   runApp(App(
@@ -34,5 +36,3 @@ void main() async {
 
   ds.closeConnection();
 }
-
-
